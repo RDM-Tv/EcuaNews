@@ -33,6 +33,10 @@
   .catb{background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 13px;color:var(--mute);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
   .catb:hover{color:var(--fg)}.catb.on{color:var(--am);border-bottom-color:var(--am)}
   .catb.fan{}.catb.fan.on{color:var(--pink);border-bottom-color:var(--pink)}
+  
+  /* CONTENEDOR DISCRETO PARA EL BANNER INFERIOR */
+  .ad-clean-box{max-width:960px;margin:30px auto 10px auto;display:flex;justify-content:center;align-items:center;overflow:hidden;background:rgba(255,255,255,0.01);border-radius:8px;padding:10px 0}
+
   .main{max-width:960px;margin:0 auto;padding:18px 16px}
   .srchwrap{position:relative;margin-bottom:14px}
   .srchinp{width:100%;background:var(--mid);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 16px 11px 42px;color:var(--fg);font-family:'Sora',sans-serif;font-size:14px;outline:none;transition:border-color .15s}
@@ -138,6 +142,12 @@
   <div class="statusbar" id="statusbar"><span class="stchip load"><span class="sdot"></span>Conectando…</span></div>
   <div id="container"><div class="loadwrap"><div class="spinner"></div><div class="loadtxt">Cargando noticias de Ecuador…</div></div></div>
   <div class="pag" id="pag"></div>
+</div>
+
+<!-- EL ÚNICO ANUNCIO CARGARÁ AQUÍ ABAJO, SIN TAPAR LOS TITULARES -->
+<div class="ad-clean-box">
+  <script async="async" data-cfasync="false" src="https://pl30224389.effectivecpmnetwork.com/a09ee1d264e83546640a3ccec70c6e1c/invoke.js"></script>
+  <div id="container-a09ee1d264e83546640a3ccec70c6e1c"></div>
 </div>
 
 <footer>
