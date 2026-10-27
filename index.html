@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcuaNews — Noticias Ecuador</title>
+<meta name="description" content="Todas las noticias de Ecuador en un solo lugar: Quito, Guayaquil, Manta, Portoviejo y más.">
+<meta name="theme-color" content="#0B1120">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EcuaNews">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇪🇨</text></svg>">
 
 <!-- ═══════════════════════════════════════════════════════
@@ -117,6 +123,24 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 
 footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center;color:var(--mute);font-size:12px;max-width:960px;margin:0 auto}
 @media(max-width:600px){.logo-txt .tag{display:none}.ftitle{font-size:17px}.nthumb{width:58px;height:58px}}
+
+/* ── PATROCINADOR ── */
+.sponsor{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(245,200,0,.10),rgba(30,58,110,.35));border:1px solid rgba(245,200,0,.35);border-radius:12px;padding:12px 14px;margin-bottom:14px;text-decoration:none;color:var(--fg)}
+.sponsor img{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.sponsor .sp-ico{width:48px;height:48px;border-radius:8px;background:var(--deep);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.sponsor .sp-body{flex:1;min-width:0}
+.sponsor .sp-tag{font-size:9px;font-weight:700;color:var(--am);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px}
+.sponsor .sp-name{font-size:14px;font-weight:700;line-height:1.25}
+.sponsor .sp-txt{font-size:12px;color:var(--mute);line-height:1.4;margin-top:2px}
+.sponsor .sp-cta{font-size:11px;font-weight:700;color:var(--bg);background:var(--am);border-radius:6px;padding:6px 10px;white-space:nowrap}
+.sponsor.empty-slot{border-style:dashed}
+/* ── COMPARTIR / INSTALAR ── */
+.btnico{background:transparent;color:var(--fg);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 10px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btnico:hover{border-color:var(--am);color:var(--am)}
+.shbtn{background:transparent;border:none;color:var(--mute);font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;padding:2px 6px;margin-left:6px;border-radius:4px}
+.shbtn:hover{color:var(--am);background:rgba(245,200,0,.08)}
+.fbody .shbtn{margin:10px 0 0;padding:4px 0;font-size:12px}
+@media(max-width:600px){.btnico .lbl{display:none}}
 </style>
 </head>
 <body>
@@ -132,6 +156,8 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
     </a>
     <div class="hright">
       <div class="ldot"></div>
+      <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app">⬇<span class="lbl"> Instalar</span></button>
+      <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews">↗<span class="lbl"> Compartir</span></button>
       <button class="btnact" id="btnRef" onclick="reload()">⟳ Actualizar</button>
     </div>
   </div>
@@ -174,6 +200,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 </div></div>
 
 <div class="main">
+  <div id="sponsorSlot"></div>
   <div class="srchwrap">
     <span class="srchico">🔍</span>
     <input class="srchinp" id="q" type="text"
@@ -199,7 +226,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 const API='https://ecual-backend.onrender.com/api';
 const PAGE_SIZE=30;
 const CAT_EMOJI={seguridad:'🚔',politica:'🏛️',economia:'💰',transito:'🚗',salud:'🏥',deportes:'⚽',tecnologia:'💻',farandula:'🌟',general:'📰'};
-let ciudad='todas',cat='todas',pagina=0,totalNews=0,searchTimer=null;
+let ciudad='todas',cat='todas',pagina=0,totalNews=0,searchTimer=null,CUR=[];
 
 function timeAgo(iso){
   const m=Math.floor((Date.now()-new Date(iso).getTime())/60000);
@@ -242,7 +269,7 @@ function renderNews(noticias){
     setContainer(`<div class="empty"><div style="font-size:36px;margin-bottom:12px">🔎</div><p style="color:var(--mute)">No hay noticias para este filtro.</p></div>`);
     return;
   }
-  const[top,...rest]=noticias;
+  const[top,...rest]=noticias;CUR=noticias;
   const em=CAT_EMOJI[top.categoria]||'📰';
   const th=top.img_url?`<img src="${top.img_url}" alt="" onerror="this.style.display='none'">`:`<span>${em}</span>`;
 
@@ -262,6 +289,7 @@ function renderNews(noticias){
         </div>
         <div class="ftitle">${top.titulo}</div>
         ${top.resumen?`<div class="fsum">${top.resumen.slice(0,220)}…</div>`:''}
+        <button class="shbtn" onclick="shareNews(event,0)">↗ Compartir</button>
       </div>
     </a>`;
 
@@ -275,7 +303,7 @@ function renderNews(noticias){
         <div class="nbody">
           <div class="nmeta"><span class="${getBadge(n)}">${getPrefix(n)}${n.fuente_nombre||''}</span><span class="clbl">📍 ${n.ciudad_label||'Nacional'}</span></div>
           <div class="ntitle">${n.titulo}</div>
-          <div class="nsrc">${timeAgo(n.publicado_en)}</div>
+          <div class="nsrc">${timeAgo(n.publicado_en)}<button class="shbtn" onclick="shareNews(event,${i+1})">↗ Compartir</button></div>
         </div>
       </a>`;
       /* AD cada 10 noticias — descomenta cuando tengas AdSense aprobado
@@ -309,13 +337,75 @@ function updateStatus(ok,count){
 }
 
 function goPage(p){pagina=p;window.scrollTo({top:0,behavior:'smooth'});fetchNews();}
-function setCity(c,btn){ciudad=c;pagina=0;document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
+function setCity(c,btn){ciudad=c;pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function setCat(c,btn){cat=c;pagina=0;document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function debounceSearch(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
 function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='⟳ Actualizando…';fetchNews().then(()=>{b.disabled=false;b.textContent='⟳ Actualizar';showToast('✅ Actualizado');});}
 function setContainer(h){document.getElementById('container').innerHTML=h;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
+/* ═════════ PATROCINADORES POR CIUDAD ═════════
+   Para vender un espacio: descomenta/edita la ciudad correspondiente.
+   - nombre, texto, url (a donde lleva el clic), img (logo opcional, URL https)
+   Ciudad sin patrocinador muestra "Anuncia aquí" (invitación a anunciar). */
+const CONTACT_WA='593000000000'; // ← CAMBIAR por tu WhatsApp (593 + número sin 0)
+const APP_URL='https://rdm-tv.github.io/EcuaNews/';
+const SPONSORS={
+  // manta:{nombre:'Nombre del negocio',texto:'Promoción o eslogan corto',url:'https://wa.me/593999999999',img:''},
+  // guayaquil:{nombre:'',texto:'',url:'',img:''},
+};
+const CITY_NAMES={todas:'todo Ecuador',quito:'Quito',guayaquil:'Guayaquil',manta:'Manta',portoviejo:'Portoviejo','santo domingo':'Santo Domingo',cuenca:'Cuenca',ambato:'Ambato',loja:'Loja',esmeraldas:'Esmeraldas',machala:'Machala',ibarra:'Ibarra'};
+function esc(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderSponsor(){
+  const el=document.getElementById('sponsorSlot');
+  const sp=SPONSORS[ciudad];
+  if(sp&&sp.nombre){
+    const ico=sp.img?`<img src="${esc(sp.img)}" alt="">`:`<div class="sp-ico">📢</div>`;
+    el.innerHTML=`<a class="sponsor" href="${esc(sp.url)}" target="_blank" rel="sponsored noopener">${ico}<div class="sp-body"><div class="sp-tag">Patrocinado</div><div class="sp-name">${esc(sp.nombre)}</div><div class="sp-txt">${esc(sp.texto)}</div></div><span class="sp-cta">Ver</span></a>`;
+  }else{
+    const nombre=CITY_NAMES[ciudad]||'tu ciudad';
+    const msg=encodeURIComponent(`Hola, quiero anunciar mi negocio en EcuaNews (${nombre}). ¿Qué precio tiene?`);
+    el.innerHTML=`<a class="sponsor empty-slot" href="https://wa.me/${CONTACT_WA}?text=${msg}" target="_blank" rel="noopener"><div class="sp-ico">📢</div><div class="sp-body"><div class="sp-tag">Espacio publicitario</div><div class="sp-name">Anuncia tu negocio en ${esc(nombre)}</div><div class="sp-txt">Llega a lectores de tu ciudad todos los días.</div></div><span class="sp-cta">Anunciar</span></a>`;
+  }
+}
+
+/* ═════════ COMPARTIR ═════════ */
+function shareApp(){
+  const data={title:'EcuaNews',text:'EcuaNews: las noticias de todo Ecuador en un solo lugar',url:APP_URL};
+  if(navigator.share){navigator.share(data).catch(()=>{});}
+  else{window.open('https://wa.me/?text='+encodeURIComponent(data.text+' '+APP_URL),'_blank');}
+}
+function shareNews(ev,i){
+  ev.preventDefault();ev.stopPropagation();
+  const n=CUR[i];if(!n)return;
+  const titulo=String(n.titulo||'').replace(/^📺\s*/,'');
+  if(navigator.share){navigator.share({title:titulo,text:titulo+' — vía EcuaNews '+APP_URL,url:n.url}).catch(()=>{});}
+  else{window.open('https://wa.me/?text='+encodeURIComponent(titulo+'\n'+n.url+'\n\nVía EcuaNews '+APP_URL),'_blank');}
+}
+
+/* ═════════ INSTALAR (PWA) ═════════ */
+let deferredPrompt=null;
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  if(!isStandalone)document.getElementById('btnInstall').style.display='inline-flex';
+});
+window.addEventListener('appinstalled',()=>{document.getElementById('btnInstall').style.display='none';showToast('✅ EcuaNews instalada');});
+if(isIOS&&!isStandalone)document.getElementById('btnInstall').style.display='inline-flex';
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;document.getElementById('btnInstall').style.display='none';});
+  }else if(isIOS){
+    alert('Para instalar en iPhone: toca el botón Compartir de Safari y elige "Añadir a pantalla de inicio".');
+  }else{
+    alert('Abre el menú del navegador (⋮) y elige "Instalar app" o "Añadir a pantalla de inicio".');
+  }
+}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
+renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();
 </script>
