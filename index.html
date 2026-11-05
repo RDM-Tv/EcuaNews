@@ -141,6 +141,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .shbtn:hover{color:var(--am);background:rgba(245,200,0,.08)}
 .fbody .shbtn{margin:10px 0 0;padding:4px 0;font-size:12px}
 @media(max-width:600px){.btnico .lbl{display:none}}
+.btnico.on{background:var(--am);color:#0B1120}
 </style>
 </head>
 <body>
@@ -156,6 +157,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
     </a>
     <div class="hright">
       <div class="ldot"></div>
+      <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora">🔔<span class="lbl"> Alertas</span></button>
       <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app">⬇<span class="lbl"> Instalar</span></button>
       <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews">↗<span class="lbl"> Compartir</span></button>
       <button class="btnact" id="btnRef" onclick="reload()">⟳ Actualizar</button>
@@ -407,6 +409,40 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 
 window.addEventListener('offline',()=>showToast('📴 Sin conexión: verás las últimas noticias guardadas'));
 window.addEventListener('online',()=>{showToast('✅ Conexión recuperada');fetchNews(false);});
+
+/* ═════════ ALERTAS DE ÚLTIMA HORA (push) ═════════ */
+function b64ToU8(b){const p='='.repeat((4-b.length%4)%4),r=(b+p).replace(/-/g,'+').replace(/_/g,'/'),raw=atob(r);return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));}
+async function pushSub(){const reg=await navigator.serviceWorker.ready;return reg.pushManager.getSubscription();}
+async function refreshBell(){
+  const b=document.getElementById('btnBell');if(!b)return;
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){if(!isIOS)b.style.display='none';return;}
+  try{const s=await pushSub();b.classList.toggle('on',!!s);b.title=s?'Alertas activadas (toca para desactivar)':'Activar alertas de última hora';}catch(e){}
+}
+async function toggleAlertas(){
+  if(isIOS&&!isStandalone){alert('En iPhone las alertas solo funcionan con la app instalada: toca Compartir en Safari → "Añadir a pantalla de inicio", ábrela y activa 🔔 desde ahí.');return;}
+  if(!('PushManager' in window)){alert('Tu navegador no admite notificaciones.');return;}
+  try{
+    const reg=await navigator.serviceWorker.ready,cur=await reg.pushManager.getSubscription();
+    if(cur){
+      if(!confirm('¿Desactivar las alertas de última hora?'))return;
+      await fetch(`${API}/push/unsubscribe`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:cur.endpoint})}).catch(()=>{});
+      await cur.unsubscribe();showToast('🔕 Alertas desactivadas');refreshBell();return;
+    }
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){showToast('Permiso de notificaciones denegado');return;}
+    const k=await (await fetch(`${API}/push/key`)).json();
+    if(!k.activo){showToast('Las alertas aún no están habilitadas en el servidor');return;}
+    let ciudades=[];
+    if(ciudad!=='todas'&&confirm('¿Recibir solo alertas de esta ciudad?\n\nAceptar = solo esta ciudad (y las nacionales)\nCancelar = todo Ecuador'))ciudades=[ciudad];
+    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(k.publicKey)});
+    const r=await fetch(`${API}/push/subscribe`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub.toJSON(),ciudades})});
+    if(!(await r.json()).ok)throw new Error('No se pudo guardar');
+    fetch(`${API}/push/test`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})}).catch(()=>{});
+    showToast('🔔 Alertas activadas');refreshBell();
+  }catch(e){showToast('No se pudo activar: '+e.message);}
+}
+window.addEventListener('load',()=>setTimeout(refreshBell,800));
+
 renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();

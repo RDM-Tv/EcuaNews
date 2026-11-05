@@ -1,8 +1,8 @@
-// EcuaNews service worker v2 — modo sin conexión
+// EcuaNews service worker v3 — modo sin conexión
 // • Cascarón de la app (index, manifest, iconos): carga instantánea, se actualiza en segundo plano.
 // • Noticias (API): siempre intenta la red primero; si no hay internet, muestra las últimas guardadas.
 // • Imágenes de noticias: se guardan (máx. 60) para verlas sin conexión.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL = `ecuanews-shell-${VERSION}`;
 const DATA  = `ecuanews-data-${VERSION}`;
 const IMGS  = `ecuanews-img-${VERSION}`;
@@ -72,4 +72,26 @@ self.addEventListener('fetch', e => {
       }).catch(() => cached))
     );
   }
+});
+
+// ── Notificaciones push (última hora) ──
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (_) { d = { title: 'EcuaNews', body: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'EcuaNews', {
+    body: d.body || '',
+    icon: 'icon-192.png',
+    badge: 'icon-192.png',
+    tag: d.tag || 'ecuanews',
+    data: { url: d.url || './' },
+  }));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || './';
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list) { if ('focus' in c && c.url.includes('EcuaNews')) { c.focus(); } }
+    return clients.openWindow(url);
+  }));
 });
