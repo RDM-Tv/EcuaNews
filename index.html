@@ -6,6 +6,7 @@
 <title>EcuaNews — Noticias Ecuador</title>
 <meta name="description" content="Todas las noticias de Ecuador en un solo lugar: Quito, Guayaquil, Manta, Portoviejo y más.">
 <meta name="theme-color" content="#0B1120">
+<script>try{var _t=localStorage.getItem("ecua_theme");if(_t)document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,7 +21,10 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap');
-:root{--am:#F5C800;--bg:#0B1120;--mid:#152040;--deep:#1E3A6E;--fg:#F7F8FA;--mute:#8A97AE;--red:#E8253A;--grn:#00C48C;--pink:#FF6B9D}
+:root{--am:#F5C800;--bg:#0B1120;--mid:#152040;--deep:#1E3A6E;--fg:#F7F8FA;--mute:#8A97AE;--red:#E8253A;--grn:#00C48C;--pink:#FF6B9D;--onam:#0B1120;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.18);--soft:rgba(255,255,255,.04);--sum:#C5CDDB;--shadow:none}
+:root[data-theme="light"]{--am:#B8860B;--bg:#EEF1F6;--mid:#FFFFFF;--deep:#DCE4F2;--fg:#0B1120;--mute:#5A6782;--red:#D01F33;--grn:#008A63;--pink:#D6336C;--onam:#0B1120;--bd:rgba(11,17,32,.10);--bd2:rgba(11,17,32,.22);--soft:rgba(11,17,32,.04);--sum:#3A4660;--shadow:0 1px 3px rgba(11,17,32,.10)}
+/* Zonas que siempre se ven oscuras (identidad de marca) */
+header,.brief,.toast{--am:#F5C800;--bg:#0B1120;--mid:#152040;--deep:#1E3A6E;--fg:#F7F8FA;--mute:#8A97AE;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.2);--soft:rgba(255,255,255,.04)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh}
 
@@ -35,7 +39,7 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .hright{display:flex;align-items:center;gap:10px}
 .ldot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
-.btnact{background:var(--am);color:var(--bg);border:none;border-radius:6px;padding:7px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer}
+.btnact{background:var(--am);color:var(--onam);border:none;border-radius:6px;padding:7px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer}
 .btnact:hover{opacity:.85}.btnact:disabled{opacity:.4;cursor:not-allowed}
 
 /* ── BANNER AD SLOT ── */
@@ -44,14 +48,14 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .ad-label{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 
 /* ── CITY BAR ── */
-.citybar{background:var(--mid);border-bottom:1px solid rgba(255,255,255,.06);padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.citybar{background:var(--mid);border-bottom:1px solid var(--bd);padding:0 16px;overflow-x:auto;scrollbar-width:none}
 .citybar::-webkit-scrollbar{display:none}
 .cbi{max-width:960px;margin:0 auto;display:flex;gap:4px;padding:10px 0}
-.cb{background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 13px;color:var(--mute);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
-.cb:hover{border-color:var(--am);color:var(--am)}.cb.on{background:var(--am);border-color:var(--am);color:var(--bg)}
+.cb{background:transparent;border:1px solid var(--bd2);border-radius:20px;padding:5px 13px;color:var(--mute);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.cb:hover{border-color:var(--am);color:var(--am)}.cb.on{background:var(--am);border-color:var(--am);color:var(--onam)}
 
 /* ── CATEGORY BAR ── */
-.catbar{background:var(--bg);padding:0 16px;border-bottom:1px solid rgba(255,255,255,.06);overflow-x:auto;scrollbar-width:none}
+.catbar{background:var(--bg);padding:0 16px;border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
 .catbar::-webkit-scrollbar{display:none}
 .cati{max-width:960px;margin:0 auto;display:flex}
 .catb{background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 13px;color:var(--mute);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
@@ -61,7 +65,7 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 /* ── MAIN ── */
 .main{max-width:960px;margin:0 auto;padding:18px 16px}
 .srchwrap{position:relative;margin-bottom:14px}
-.srchinp{width:100%;background:var(--mid);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 16px 11px 42px;color:var(--fg);font-family:'Sora',sans-serif;font-size:14px;outline:none;transition:border-color .15s}
+.srchinp{width:100%;background:var(--mid);border:1px solid var(--bd2);border-radius:10px;padding:11px 16px 11px 42px;color:var(--fg);font-family:'Sora',sans-serif;font-size:14px;outline:none;transition:border-color .15s}
 .srchinp:focus{border-color:var(--am)}.srchinp::placeholder{color:var(--mute)}
 .srchico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
 
@@ -78,21 +82,21 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .statrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px}
 .stattxt{font-size:12px;color:var(--mute)}.stattxt strong{color:var(--grn)}
 .seclbl{font-size:11px;font-weight:700;color:var(--mute);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
-.fcard{background:var(--mid);border-radius:14px;overflow:hidden;margin-bottom:14px;border:1px solid rgba(255,255,255,.07);text-decoration:none;display:block;transition:transform .15s,border-color .15s}
+.fcard{background:var(--mid);border-radius:14px;overflow:hidden;margin-bottom:14px;border:1px solid var(--bd);text-decoration:none;display:block;transition:transform .15s,border-color .15s}
 .fcard:hover{transform:translateY(-2px);border-color:var(--am)}
 .fcard.fan-card:hover{border-color:var(--pink)}
 .fthumb{width:100%;height:190px;background:linear-gradient(135deg,var(--deep),var(--mid));display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden}
 .fthumb img{width:100%;height:100%;object-fit:cover}
 .fbody{padding:16px}
 .fmeta{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap}
-.bdg{background:var(--am);color:var(--bg);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase}
+.bdg{background:var(--am);color:var(--onam);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase}
 .bdg.fan{background:var(--pink);color:#fff}
 .bdg.yt{background:#FF0000;color:#fff}
 .tago{font-size:11px;color:var(--mute)}.clbl{font-size:11px;color:var(--grn);font-weight:600}
 .ftitle{font-family:'Newsreader',serif;font-size:19px;font-weight:700;line-height:1.3;color:var(--fg);margin-bottom:6px}
 .fsum{font-size:13px;color:var(--mute);line-height:1.6}
 .ngrid{display:flex;flex-direction:column;gap:8px}
-.ncard{background:var(--mid);border-radius:12px;padding:13px;border:1px solid rgba(255,255,255,.06);text-decoration:none;display:flex;gap:12px;align-items:flex-start;transition:border-color .15s,transform .1s}
+.ncard{background:var(--mid);border-radius:12px;padding:13px;border:1px solid var(--bd);text-decoration:none;display:flex;gap:12px;align-items:flex-start;transition:border-color .15s,transform .1s}
 .ncard:hover{border-color:rgba(245,200,0,.35);transform:translateX(2px)}
 .ncard.fan-card:hover{border-color:rgba(255,107,157,.4)}
 .nthumb{width:66px;height:66px;border-radius:8px;background:var(--deep);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden}
@@ -103,11 +107,11 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .nsrc{font-size:11px;color:var(--mute)}
 
 /* ── AD BETWEEN ARTICLES ── */
-.ad-inline{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;margin:12px 0}
+.ad-inline{background:var(--soft);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center;margin:12px 0}
 
 /* ── PAGINATION ── */
 .pag{display:flex;justify-content:center;gap:8px;margin-top:24px}
-.pagbtn{background:var(--mid);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 20px;color:var(--fg);font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.pagbtn{background:var(--mid);border:1px solid var(--bd2);border-radius:8px;padding:8px 20px;color:var(--fg);font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
 .pagbtn:hover{border-color:var(--am);color:var(--am)}.pagbtn:disabled{opacity:.3;cursor:not-allowed}
 
 /* ── LOADER ── */
@@ -118,10 +122,10 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .empty{text-align:center;padding:60px 20px;color:var(--mute)}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--am);color:var(--bg);font-weight:700;font-size:13px;padding:10px 20px;border-radius:8px;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--am);color:var(--onam);font-weight:700;font-size:13px;padding:10px 20px;border-radius:8px;transition:transform .3s;z-index:999;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center;color:var(--mute);font-size:12px;max-width:960px;margin:0 auto}
+footer{border-top:1px solid var(--bd);padding:20px;text-align:center;color:var(--mute);font-size:12px;max-width:960px;margin:0 auto}
 @media(max-width:600px){.logo-txt .tag{display:none}.ftitle{font-size:17px}.nthumb{width:58px;height:58px}}
 
 /* ── PATROCINADOR ── */
@@ -132,10 +136,10 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .sponsor .sp-tag{font-size:9px;font-weight:700;color:var(--am);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px}
 .sponsor .sp-name{font-size:14px;font-weight:700;line-height:1.25}
 .sponsor .sp-txt{font-size:12px;color:var(--mute);line-height:1.4;margin-top:2px}
-.sponsor .sp-cta{font-size:11px;font-weight:700;color:var(--bg);background:var(--am);border-radius:6px;padding:6px 10px;white-space:nowrap}
+.sponsor .sp-cta{font-size:11px;font-weight:700;color:var(--onam);background:var(--am);border-radius:6px;padding:6px 10px;white-space:nowrap}
 .sponsor.empty-slot{border-style:dashed}
 /* ── COMPARTIR / INSTALAR ── */
-.btnico{background:transparent;color:var(--fg);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 10px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btnico{background:transparent;color:var(--fg);border:1px solid var(--bd2);border-radius:6px;padding:6px 10px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .btnico:hover{border-color:var(--am);color:var(--am)}
 .shbtn{background:transparent;border:none;color:var(--mute);font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;padding:2px 6px;margin-left:6px;border-radius:4px}
 .shbtn:hover{color:var(--am);background:rgba(245,200,0,.08)}
@@ -150,33 +154,33 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .cb .i,.catb .i{margin-right:4px}
 .shbtn.on{color:var(--am)}
 .nsrc{flex-wrap:wrap}
-.statrow .shbtn{border:1px solid rgba(255,255,255,.15);padding:4px 10px;margin:0}
+.statrow .shbtn{border:1px solid var(--bd2);padding:4px 10px;margin:0}
 @media(max-width:600px){.ncard .lb{display:none}}
 .emo{font-style:normal;line-height:1}.emo.big{font-size:36px}.ic{display:inline}
 #intModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
 #intModal.show{display:flex}
-.intbox{background:var(--mid);border:1px solid rgba(255,255,255,.12);border-radius:14px;max-width:420px;width:100%;padding:20px;max-height:90vh;overflow:auto}
+.intbox{background:var(--mid);border:1px solid var(--bd2);border-radius:14px;max-width:420px;width:100%;padding:20px;max-height:90vh;overflow:auto}
 .intbox h3{font-family:'Sora',sans-serif;font-size:16px;margin-bottom:4px}
 .intbox p{color:var(--mute);font-size:12.5px;margin-bottom:14px;line-height:1.5}
 .intgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.intopt{background:var(--bg);border:1px solid rgba(255,255,255,.15);color:var(--fg);border-radius:8px;padding:10px;font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-align:left}
+.intopt{background:var(--bg);border:1px solid var(--bd2);color:var(--fg);border-radius:8px;padding:10px;font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-align:left}
 .intopt.on{border-color:var(--am);color:var(--am)}
 .introw{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-.introw button{border-radius:8px;padding:9px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--fg)}
-.introw .pri{background:var(--am);color:var(--bg);border-color:var(--am)}
+.introw button{border-radius:8px;padding:9px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:1px solid var(--bd2);background:transparent;color:var(--fg)}
+.introw .pri{background:var(--am);color:var(--onam);border-color:var(--am)}
 .main{max-width:1040px}
 .portada{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
 .pmain{min-width:0}
-.trend{position:sticky;top:12px;background:var(--mid);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px}
+.trend{position:sticky;top:12px;background:var(--mid);border:1px solid var(--bd);border-radius:14px;padding:16px}
 .trend h4{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;margin-bottom:10px;color:var(--am)}
 .trend .sub{font-size:11px;color:var(--mute);margin:-6px 0 10px;line-height:1.4}
-.tr{display:flex;gap:10px;align-items:flex-start;text-decoration:none;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.tr{display:flex;gap:10px;align-items:flex-start;text-decoration:none;padding:8px 0;border-bottom:1px solid var(--bd)}
 .tr:last-of-type{border-bottom:none}
 .trn{font-family:'Sora',sans-serif;font-weight:800;color:var(--am);font-size:15px;min-width:16px}
 .trt{font-size:12.5px;line-height:1.35;color:var(--fg);font-weight:600}
 .trm{display:block;font-size:10.5px;color:var(--mute);font-weight:500;margin-top:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.chip{background:var(--bg);border:1px solid rgba(255,255,255,.15);color:var(--fg);border-radius:20px;padding:5px 11px;font-family:'Sora',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer}
+.chip{background:var(--bg);border:1px solid var(--bd2);color:var(--fg);border-radius:20px;padding:5px 11px;font-family:'Sora',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer}
 .chip:hover{border-color:var(--am);color:var(--am)}
 .brief{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--deep),var(--mid));border:1px solid rgba(245,200,0,.4);border-radius:14px;padding:14px 16px;margin-bottom:16px;cursor:pointer;transition:transform .15s}
 .brief:hover{transform:translateY(-1px)}
@@ -187,7 +191,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .hero .fthumb{height:270px}
 .hero .ftitle{font-size:25px}
 .sec3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 20px}
-.scard{background:var(--mid);border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;text-decoration:none;display:block;transition:border-color .15s}
+.scard{background:var(--mid);border:1px solid var(--bd);border-radius:12px;overflow:hidden;text-decoration:none;display:block;transition:border-color .15s}
 .scard:hover{border-color:var(--am)}
 .sth{height:100px;background:linear-gradient(135deg,var(--deep),var(--mid));display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden}
 .sth img{width:100%;height:100%;object-fit:cover}
@@ -197,27 +201,47 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .scard .lb{display:none}
 #briefModal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:flex-start;justify-content:center;z-index:210;padding:14px;overflow:auto}
 #briefModal.show{display:flex}
-.briefbox{background:var(--mid);border:1px solid rgba(255,255,255,.12);border-radius:14px;max-width:600px;width:100%;padding:20px;margin:auto}
+.briefbox{background:var(--mid);border:1px solid var(--bd2);border-radius:14px;max-width:600px;width:100%;padding:20px;margin:auto}
 .briefbox h3{font-family:'Sora',sans-serif;font-size:18px;color:var(--am);margin-bottom:2px}
 .briefbox .bdate{font-size:12px;color:var(--mute);margin-bottom:12px;text-transform:capitalize}
-.bitem{display:flex;gap:12px;padding:14px 0;border-top:1px solid rgba(255,255,255,.08)}
+.bitem{display:flex;gap:12px;padding:14px 0;border-top:1px solid var(--bd)}
 .bnum{font-family:'Sora',sans-serif;font-weight:800;font-size:20px;color:var(--am);min-width:22px}
 .bmeta{font-size:11px;color:var(--mute);margin-bottom:4px;font-weight:600}
 .btit{font-family:'Newsreader',serif;font-size:17px;font-weight:700;line-height:1.3;margin-bottom:5px}
-.bsum{font-size:13px;color:#C5CDDB;line-height:1.55;margin-bottom:7px}
+.bsum{font-size:13px;color:var(--sum);line-height:1.55;margin-bottom:7px}
 .bsrc{font-size:11px;color:var(--mute);margin-bottom:6px}
 .bsrc a{color:var(--fg);text-decoration:underline;margin-right:8px}
 .bread{font-size:12.5px;font-weight:700;color:var(--am);text-decoration:none}
-.bfoot{font-size:11px;color:var(--mute);margin-top:12px;line-height:1.5;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+.bfoot{font-size:11px;color:var(--mute);margin-top:12px;line-height:1.5;border-top:1px solid var(--bd);padding-top:10px}
 .brow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.brow button{border-radius:8px;padding:9px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--fg)}
-.brow .pri{background:var(--am);color:var(--bg);border-color:var(--am)}
+.brow button{border-radius:8px;padding:9px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:1px solid var(--bd2);background:transparent;color:var(--fg)}
+.brow .pri{background:var(--am);color:var(--onam);border-color:var(--am)}
 @media(max-width:860px){.portada{grid-template-columns:1fr}.trend{position:static}}
 @media(max-width:600px){.sec3{grid-template-columns:1fr}.hero .fthumb{height:200px}.hero .ftitle{font-size:20px}.brief .bgo{display:none}}
+
+:root[data-theme="light"] .fcard,:root[data-theme="light"] .ncard,:root[data-theme="light"] .scard,:root[data-theme="light"] .trend{box-shadow:var(--shadow)}
+.fcard,.ncard,.scard,.trend,.srchinp{transition:background .2s,border-color .15s}
+body{overflow-x:hidden}
+/* ancho: aprovecha pantallas grandes */
+.hi,.cbi,.cati,.ad-banner,footer{max-width:1240px}
+.main{max-width:1240px}
+@media(min-width:1000px){.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+/* responsive cabecera */
+.hi{height:auto;min-height:58px;flex-wrap:wrap;gap:8px;padding:6px 0}
+.hright{flex-wrap:wrap;justify-content:flex-end;gap:8px}
+@media(max-width:700px){.btnico .lbl,.btnact .lbl{display:none}.btnico,.btnact{padding:7px 9px}.ldot{display:none}.hright{gap:6px}.logo-txt .name{font-size:19px}}
+@media(max-width:380px){.logo-txt{display:none}.hi{justify-content:center}}
+/* clima */
+.wx{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+.wxr{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12.5px}
+.wxc{flex:1;font-weight:600}.wxi{font-size:18px;min-width:24px;text-align:center}
+.wxt{font-family:'Sora',sans-serif;font-weight:800;min-width:38px;text-align:right}
+.wxm{color:var(--mute);font-size:11px;min-width:64px;text-align:right}
+.tcount{opacity:.6;font-weight:500;margin-left:4px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol><symbol id="i-dollar" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol><symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol><symbol id="i-dollar" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol><symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol><symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol></svg>
 
 <header>
   <div class="hi">
@@ -234,7 +258,8 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
       <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><span class="ic" data-i="bell"></span><span class="lbl"> Alertas</span></button>
       <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><span class="ic" data-i="download"></span><span class="lbl"> Instalar</span></button>
       <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
-      <button class="btnact" id="btnRef" onclick="reload()"><span class="ic" data-i="refresh"></span> Actualizar</button>
+      <button class="btnico" id="btnTheme" onclick="toggleTheme()" title="Cambiar entre tema claro y oscuro"><span class="ic" data-i="moon"></span><span class="lbl"> Tema</span></button>
+      <button class="btnact" id="btnRef" onclick="reload()"><span class="ic" data-i="refresh"></span><span class="lbl"> Actualizar</span></button>
     </div>
   </div>
 </header>
@@ -295,7 +320,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 
 <footer>
   <span class="ic" data-i="logo"></span> EcuaNews · Noticias de Ecuador en tiempo real<br>
-  <span style="color:rgba(255,255,255,.2);font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span>
+  <span style="color:var(--mute);opacity:.7;font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span>
 </footer>
 <div id="intModal" onclick="if(event.target===this)closeInterests()"><div class="intbox"><h3>Elige tus intereses</h3><p>"Para ti" mostrará primero estos temas. Se guardan solo en tu dispositivo y puedes cambiarlos o borrarlos cuando quieras.</p><div class="intgrid" id="intGrid"></div><div class="introw"><button onclick="clearInterests()">Borrar</button><button onclick="closeInterests()">Cancelar</button><button class="pri" onclick="saveInterests()">Guardar</button></div></div></div>
 <div id="briefModal" onclick="if(event.target===this)closeBrief()"><div class="briefbox" id="briefBox"></div></div>
@@ -314,7 +339,7 @@ const E=t=>EMOJI_OK?t:'';
 const API='https://ecual-backend.onrender.com/api';
 const PAGE_SIZE=30;
 const CAT_ICO={seguridad:'shield',politica:'landmark',economia:'dollar',transito:'car',salud:'health',deportes:'ball',tecnologia:'laptop',farandula:'star',general:'news'};
-const EMO={bell:'🔔',download:'⬇',share:'↗',refresh:'⟳',search:'🔍',find:'🔎',pin:'📍',tack:'📌',news:'📰',bookmark:'🔖',headphones:'🎧',stop:'⏹',shield:'🚔',landmark:'🏛️',dollar:'💰',car:'🚗',health:'🏥',ball:'⚽',laptop:'💻',star:'🌟',play:'▶',alert:'⚠️',mega:'📢',logo:'🦅'};
+const EMO={sun:'☀️',moon:'🌙',bell:'🔔',download:'⬇',share:'↗',refresh:'⟳',search:'🔍',find:'🔎',pin:'📍',tack:'📌',news:'📰',bookmark:'🔖',headphones:'🎧',stop:'⏹',shield:'🚔',landmark:'🏛️',dollar:'💰',car:'🚗',health:'🏥',ball:'⚽',laptop:'💻',star:'🌟',play:'▶',alert:'⚠️',mega:'📢',logo:'🦅'};
 const SVGALIAS={logo:'news',tack:'pin',find:'search'};
 function I(n,fill,cls){
   if(EMOJI_OK&&EMO[n])return `<span class="emo${cls==='big'?' big':''}">${EMO[n]}</span>`;
@@ -453,7 +478,7 @@ function goPage(p){pagina=p;window.scrollTo({top:0,behavior:'smooth'});fetchNews
 function setCity(c,btn){leaveSaved();ciudad=c;pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function setCat(c,btn){leaveSaved();cat=c;pagina=0;document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function debounceSearch(){leaveSaved();clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
-function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+' Actualizar';showToast(E('✅ ')+'Actualizado');});}
+function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+'<span class="lbl"> Actualizar</span>';showToast(E('✅ ')+'Actualizado');});}
 function setContainer(h){document.getElementById('container').innerHTML=h;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
@@ -647,7 +672,8 @@ function clearInterests(){
 }
 
 /* ═════════ PORTADA EDITORIAL · TENDENCIAS · ENTÉRATE EN 60 SEGUNDOS ═════════ */
-const STOPW=new Set('para como esta este esto estos estas desde hasta entre sobre tras segun luego aunque porque cuando donde tambien tiene tienen sera seran fue fueron han hay ante bajo cada otro otra otros otras mas menos muy ecuador ecuatoriano ecuatoriana ecuatorianos ecuatorianas dijo anos ayer hoy manana personas persona dias semana nuevo nueva podria pueden puede ser son tras via'.split(' '));
+const STOPW=new Set('para como esta este esto estos estas desde hasta entre sobre tras segun luego aunque porque cuando donde tambien tiene tienen sera seran fue fueron han hay ante bajo cada otro otra otros otras mas menos muy ecuador ecuatoriano ecuatoriana ecuatorianos ecuatorianas dijo anos ayer hoy manana personas persona dias semana nuevo nueva podria pueden puede ser son tras via lunes martes miercoles jueves viernes sabado domingo enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre anoche quito guayaquil cuenca manta portoviejo ambato loja esmeraldas machala ibarra ciudad pais'.split(' '));
+const JUNK_RE=/^(portada|portadas|primera plana|resumen del dia|boletin)\b|portada del|portadas de/;
 const URG_RE=/\b(sismo|sismos|temblor|terremoto|tsunami|erupcion|emergencia|apagon|incendio|deslave|inundacion|evacuacion|explosion|atentado|balacera|estado de excepcion|toque de queda|paro nacional)\b/;
 const nrm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ ]/g,' ').replace(/\s+/g,' ').trim();
 const tks=t=>new Set(nrm(t).split(' ').filter(w=>w.length>=4&&!STOPW.has(w)));
@@ -660,9 +686,9 @@ function groupNews(list){
 const RC={};
 async function getRecent(){
   const c=RC.all;if(c&&Date.now()-c.t<300000)return c.d;
-  const r=await fetch(`${API}/noticias?limit=100`);if(!r.ok)throw new Error('sin datos');
+  const r=await fetch(`${API}/noticias?limit=250`);if(!r.ok)throw new Error('sin datos');
   const j=await r.json();
-  const d=(j.noticias||[]).filter(n=>n.tipo!=='youtube'&&Date.now()-new Date(n.publicado_en)<86400000);
+  const d=(j.noticias||[]).filter(n=>n.tipo!=='youtube'&&Date.now()-new Date(n.publicado_en)<86400000&&!JUNK_RE.test(nrm(n.titulo)));
   RC.all={t:Date.now(),d};return d;
 }
 function renderPortada(noticias){
@@ -710,31 +736,61 @@ function renderPortada(noticias){
     });
     html+=`</div>`;
   }
-  html+=`</div><aside class="trend" id="trendBox"><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></aside></div>`;
+  html+=`</div><aside class="trend" id="trendBox"><div id="wxBox"></div><div id="trBody"><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div></aside></div>`;
   setContainer(html);
-  loadTrends();
+  loadTrends();loadWeather();
 }
 async function loadTrends(){
-  const box=document.getElementById('trendBox');if(!box)return;
+  const box=document.getElementById('trBody');if(!box)return;
+  const H=`<h4>${I('star')} Tendencias en Ecuador</h4>`;
   try{
     const list=await getRecent();
-    const groups=groupNews(list).map(g=>({g,src:new Set(g.map(n=>n.fuente_id||n.fuente_nombre)).size}));
-    const top=groups.filter(x=>x.src>=2).sort((a,b)=>b.src-a.src).slice(0,5);
+    const groups=groupNews(list).map(g=>({g,src:new Set(g.map(n=>n.fuente_id||n.fuente_nombre)).size,t:+new Date(g[0].publicado_en)}));
+    const top=groups.filter(x=>x.src>=2).sort((a,b)=>b.src-a.src||b.t-a.t).slice(0,5);
     const df={},disp={};
     groups.forEach(x=>{const seen=new Set();
       String(x.g[0].titulo).toLowerCase().split(/[^\p{L}\p{N}]+/u).forEach(w=>{const k=nrm(w);if(k.length<5||STOPW.has(k)||seen.has(k))return;seen.add(k);df[k]=(df[k]||0)+1;disp[k]=w;});});
-    const topics=Object.keys(df).filter(k=>df[k]>=2).sort((a,b)=>df[b]-df[a]).slice(0,8);
-    let h=`<h4>${I('star')} Tendencias en Ecuador</h4>`;
+    const topics=Object.keys(df).filter(k=>df[k]>=2).sort((a,b)=>df[b]-df[a]||a.localeCompare(b)).slice(0,8);
+    let h=H;
     if(top.length){
-      h+=`<div class="sub">Hechos que más medios están cubriendo ahora</div>`+top.map((x,i)=>`<a class="tr" href="${x.g[0].url}" target="_blank" rel="noopener"><span class="trn">${i+1}</span><span class="trt">${cl(x.g[0].titulo)}<span class="trm">${x.src} medios</span></span></a>`).join('');
+      h+=`<div class="sub">Hechos que más medios cubren, de mayor a menor</div>`+top.map((x,i)=>`<a class="tr" href="${x.g[0].url}" target="_blank" rel="noopener"><span class="trn">${i+1}</span><span class="trt">${cl(x.g[0].titulo)}<span class="trm">${x.src} medios</span></span></a>`).join('');
     }
     if(topics.length){
-      h+=`<h4 style="margin-top:14px">Temas del momento</h4><div class="chips">${topics.map(k=>`<button class="chip" onclick="searchTopic('${disp[k].replace(/'/g,'')}')">${disp[k].charAt(0).toUpperCase()+disp[k].slice(1)}</button>`).join('')}</div>`;
+      h+=`<h4 style="margin-top:14px">Temas del momento</h4><div class="sub">Ordenados por número de noticias</div><div class="chips">${topics.map(k=>`<button class="chip" onclick="searchTopic('${disp[k].replace(/'/g,'')}')">${disp[k].charAt(0).toUpperCase()+disp[k].slice(1)}<span class="tcount">${df[k]}</span></button>`).join('')}</div>`;
     }
     if(!top.length&&!topics.length)h+=`<div class="sub">Aún no hay suficientes noticias para detectar tendencias.</div>`;
     else h+=`<div class="sub" style="margin:12px 0 0">Se calcula según cuántos medios publican sobre cada tema. No mide lecturas.</div>`;
     box.innerHTML=h;
-  }catch(e){box.innerHTML=`<h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">No se pudieron cargar las tendencias.</div>`;}
+  }catch(e){box.innerHTML=H+`<div class="sub">No se pudieron cargar las tendencias.</div>`;}
+}
+/* ── Clima (Open-Meteo, gratis, sin clave) ── */
+const WX_CITIES={quito:[-0.1807,-78.4678,'Quito'],guayaquil:[-2.1894,-79.8891,'Guayaquil'],cuenca:[-2.9001,-79.0059,'Cuenca'],manta:[-0.9677,-80.7089,'Manta'],portoviejo:[-1.0546,-80.4545,'Portoviejo'],'santo domingo':[-0.2530,-79.1754,'Sto. Domingo'],ambato:[-1.2417,-78.6197,'Ambato'],loja:[-3.9931,-79.2042,'Loja'],esmeraldas:[0.9682,-79.6517,'Esmeraldas'],machala:[-3.2581,-79.9554,'Machala'],ibarra:[0.3517,-78.1223,'Ibarra']};
+function wxInfo(c){
+  if(c===0)return['☀️','Despejado'];if(c<=2)return['⛅','Parcialmente nublado'];if(c===3)return['☁️','Nublado'];
+  if(c===45||c===48)return['🌫️','Niebla'];if(c>=51&&c<=57)return['🌦️','Llovizna'];if(c>=61&&c<=67)return['🌧️','Lluvia'];
+  if(c>=71&&c<=77)return['❄️','Nieve'];if(c>=80&&c<=82)return['🌧️','Chubascos'];if(c>=95)return['⛈️','Tormenta'];return['🌡️',''];
+}
+const WXC={};
+async function loadWeather(){
+  const box=document.getElementById('wxBox');if(!box)return;
+  const keys=ciudad==='todas'?['quito','guayaquil','cuenca','manta']:[ciudad].filter(k=>WX_CITIES[k]);
+  if(!keys.length){box.innerHTML='';return;}
+  const ck=keys.join('|');
+  try{
+    let d=WXC[ck];
+    if(!d||Date.now()-d.t>1800000){
+      const p=new URLSearchParams({latitude:keys.map(k=>WX_CITIES[k][0]).join(','),longitude:keys.map(k=>WX_CITIES[k][1]).join(','),current:'temperature_2m,weather_code',daily:'temperature_2m_max,temperature_2m_min,precipitation_probability_max',timezone:'America/Guayaquil',forecast_days:1});
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?'+p);if(!r.ok)throw new Error('clima');
+      let j=await r.json();if(!Array.isArray(j))j=[j];
+      d=WXC[ck]={t:Date.now(),j};
+    }
+    box.innerHTML=`<div class="wx"><h4>${E('🌤️ ')}Clima hoy</h4>`+keys.map((k,i)=>{
+      const w=d.j[i];if(!w||!w.current)return '';
+      const [ic,tx]=wxInfo(w.current.weather_code);
+      const mx=Math.round(w.daily.temperature_2m_max[0]),mn=Math.round(w.daily.temperature_2m_min[0]),pr=w.daily.precipitation_probability_max[0];
+      return `<div class="wxr" title="${tx}"><span class="wxi">${EMOJI_OK?ic:''}</span><span class="wxc">${WX_CITIES[k][2]}${EMOJI_OK?'':'<br><small style="color:var(--mute);font-weight:500">'+tx+'</small>'}</span><span class="wxt">${Math.round(w.current.temperature_2m)}°</span><span class="wxm">${mn}°/${mx}° · ${pr==null?'–':pr+'%'}</span></div>`;}).join('')
+      +`<div class="sub" style="margin:6px 0 0">Mín/máx y probabilidad de lluvia. Datos: Open-Meteo.</div></div>`;
+  }catch(e){box.innerHTML='';}
 }
 function searchTopic(w){
   leaveSaved();document.getElementById('q').value=w;pagina=0;fetchNews();
@@ -796,7 +852,22 @@ function speakBrief(){
   speakList(['Entérate en 60 segundos.',...BRIEF.map((b,k)=>`Noticia ${k+1}. ${b.title}. ${b.sum}`)],'btnBriefAudio');
 }
 
+/* ═════════ TEMA CLARO / OSCURO ═════════ */
+function currentTheme(){return document.documentElement.getAttribute('data-theme')==='light'?'light':'dark';}
+function applyThemeUI(){
+  const light=currentTheme()==='light';
+  const b=document.getElementById('btnTheme');if(b)b.querySelector('.ic').innerHTML=I(light?'moon':'sun');
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',light?'#0B1120':'#0B1120');
+}
+function toggleTheme(){
+  const t=currentTheme()==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('ecua_theme',t);}catch(e){}
+  applyThemeUI();
+}
+
 fillIcons();
+applyThemeUI();
 renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();
