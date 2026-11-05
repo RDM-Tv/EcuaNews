@@ -152,6 +152,18 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 .nsrc{flex-wrap:wrap}
 .statrow .shbtn{border:1px solid rgba(255,255,255,.15);padding:4px 10px;margin:0}
 @media(max-width:600px){.ncard .lb{display:none}}
+.emo{font-style:normal;line-height:1}.emo.big{font-size:36px}.ic{display:inline}
+#intModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+#intModal.show{display:flex}
+.intbox{background:var(--mid);border:1px solid rgba(255,255,255,.12);border-radius:14px;max-width:420px;width:100%;padding:20px;max-height:90vh;overflow:auto}
+.intbox h3{font-family:'Sora',sans-serif;font-size:16px;margin-bottom:4px}
+.intbox p{color:var(--mute);font-size:12.5px;margin-bottom:14px;line-height:1.5}
+.intgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.intopt{background:var(--bg);border:1px solid rgba(255,255,255,.15);color:var(--fg);border-radius:8px;padding:10px;font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-align:left}
+.intopt.on{border-color:var(--am);color:var(--am)}
+.introw{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.introw button{border-radius:8px;padding:9px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--fg)}
+.introw .pri{background:var(--am);color:var(--bg);border-color:var(--am)}
 </style>
 </head>
 <body>
@@ -160,7 +172,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 <header>
   <div class="hi">
     <a class="logo" href="#">
-      <span class="logo-icon"><svg class="i" aria-hidden="true"><use href="#i-news"/></svg></span>
+      <span class="logo-icon"><span class="ic" data-i="logo"></span></span>
       <div class="logo-txt">
         <div class="name">Ecua<span>News</span></div>
         <div class="tag">Noticias Ecuador</div>
@@ -168,11 +180,11 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
     </a>
     <div class="hright">
       <div class="ldot"></div>
-      <button class="btnico" id="btnFav" onclick="toggleSaved()" title="Noticias guardadas"><svg class="i" aria-hidden="true"><use href="#i-bookmark"/></svg><span class="lbl"> Guardadas</span></button>
-      <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="lbl"> Alertas</span></button>
-      <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><span class="lbl"> Instalar</span></button>
-      <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg><span class="lbl"> Compartir</span></button>
-      <button class="btnact" id="btnRef" onclick="reload()"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg> Actualizar</button>
+      <button class="btnico" id="btnFav" onclick="toggleSaved()" title="Noticias guardadas"><span class="ic" data-i="bookmark"></span><span class="lbl"> Guardadas</span></button>
+      <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><span class="ic" data-i="bell"></span><span class="lbl"> Alertas</span></button>
+      <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><span class="ic" data-i="download"></span><span class="lbl"> Instalar</span></button>
+      <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
+      <button class="btnact" id="btnRef" onclick="reload()"><span class="ic" data-i="refresh"></span> Actualizar</button>
     </div>
   </div>
 </header>
@@ -187,36 +199,37 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 -->
 
 <div class="citybar"><div class="cbi">
-  <button class="cb on" onclick="setCity('todas',this)">Todo el país</button>
-  <button class="cb" onclick="setCity('quito',this)">Quito</button>
-  <button class="cb" onclick="setCity('guayaquil',this)">Guayaquil</button>
-  <button class="cb" onclick="setCity('manta',this)">Manta</button>
-  <button class="cb" onclick="setCity('portoviejo',this)">Portoviejo</button>
-  <button class="cb" onclick="setCity('cuenca',this)">Cuenca</button>
-  <button class="cb" onclick="setCity('santo domingo',this)">Sto. Domingo</button>
-  <button class="cb" onclick="setCity('ambato',this)">Ambato</button>
-  <button class="cb" onclick="setCity('loja',this)">Loja</button>
-  <button class="cb" onclick="setCity('esmeraldas',this)">Esmeraldas</button>
-  <button class="cb" onclick="setCity('machala',this)">Machala</button>
-  <button class="cb" onclick="setCity('ibarra',this)">Ibarra</button>
+  <button class="cb on" onclick="setCity('todas',this)"><span class="ic" data-e="🇪🇨"></span> Todo el país</button>
+  <button class="cb" onclick="setCity('quito',this)"><span class="ic" data-e="🏔️"></span> Quito</button>
+  <button class="cb" onclick="setCity('guayaquil',this)"><span class="ic" data-e="🌊"></span> Guayaquil</button>
+  <button class="cb" onclick="setCity('manta',this)"><span class="ic" data-e="⚓"></span> Manta</button>
+  <button class="cb" onclick="setCity('portoviejo',this)"><span class="ic" data-e="🏙️"></span> Portoviejo</button>
+  <button class="cb" onclick="setCity('cuenca',this)"><span class="ic" data-e="🏛️"></span> Cuenca</button>
+  <button class="cb" onclick="setCity('santo domingo',this)"><span class="ic" data-e="🌿"></span> Sto. Domingo</button>
+  <button class="cb" onclick="setCity('ambato',this)"><span class="ic" data-e="🌄"></span> Ambato</button>
+  <button class="cb" onclick="setCity('loja',this)"><span class="ic" data-e="🎵"></span> Loja</button>
+  <button class="cb" onclick="setCity('esmeraldas',this)"><span class="ic" data-e="🌴"></span> Esmeraldas</button>
+  <button class="cb" onclick="setCity('machala',this)"><span class="ic" data-e="🍌"></span> Machala</button>
+  <button class="cb" onclick="setCity('ibarra',this)"><span class="ic" data-e="🏘️"></span> Ibarra</button>
 </div></div>
 
 <div class="catbar"><div class="cati">
   <button class="catb on" onclick="setCat('todas',this)">Todas</button>
-  <button class="catb" onclick="setCat('seguridad',this)"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg> Seguridad</button>
-  <button class="catb" onclick="setCat('politica',this)"><svg class="i" aria-hidden="true"><use href="#i-landmark"/></svg> Política</button>
-  <button class="catb" onclick="setCat('economia',this)"><svg class="i" aria-hidden="true"><use href="#i-dollar"/></svg> Economía</button>
-  <button class="catb" onclick="setCat('transito',this)"><svg class="i" aria-hidden="true"><use href="#i-car"/></svg> Tránsito</button>
-  <button class="catb" onclick="setCat('salud',this)"><svg class="i" aria-hidden="true"><use href="#i-health"/></svg> Salud</button>
-  <button class="catb" onclick="setCat('deportes',this)"><svg class="i" aria-hidden="true"><use href="#i-ball"/></svg> Deportes</button>
-  <button class="catb" onclick="setCat('tecnologia',this)"><svg class="i" aria-hidden="true"><use href="#i-laptop"/></svg> Tecnología</button>
-  <button class="catb fan" onclick="setCat('farandula',this)"><svg class="i" aria-hidden="true"><use href="#i-star"/></svg> Farándula</button>
+  <button class="catb" id="btnForYou" onclick="setForYou(this)"><span class="ic" data-i="star"></span> Para ti</button>
+  <button class="catb" onclick="setCat('seguridad',this)"><span class="ic" data-i="shield"></span> Seguridad</button>
+  <button class="catb" onclick="setCat('politica',this)"><span class="ic" data-i="landmark"></span> Política</button>
+  <button class="catb" onclick="setCat('economia',this)"><span class="ic" data-i="dollar"></span> Economía</button>
+  <button class="catb" onclick="setCat('transito',this)"><span class="ic" data-i="car"></span> Tránsito</button>
+  <button class="catb" onclick="setCat('salud',this)"><span class="ic" data-i="health"></span> Salud</button>
+  <button class="catb" onclick="setCat('deportes',this)"><span class="ic" data-i="ball"></span> Deportes</button>
+  <button class="catb" onclick="setCat('tecnologia',this)"><span class="ic" data-i="laptop"></span> Tecnología</button>
+  <button class="catb fan" onclick="setCat('farandula',this)"><span class="ic" data-i="star"></span> Farándula</button>
 </div></div>
 
 <div class="main">
   <div id="sponsorSlot"></div>
   <div class="srchwrap">
-    <span class="srchico"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></span>
+    <span class="srchico"><span class="ic" data-i="search"></span></span>
     <input class="srchinp" id="q" type="text"
       placeholder="Buscar: Ecuavisa, Oromar, cortes de luz, tránsito…"
       oninput="debounceSearch()">
@@ -231,19 +244,39 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:20px;text-align:center
 </div>
 
 <footer>
-  EcuaNews · Noticias de Ecuador en tiempo real<br>
+  <span class="ic" data-i="logo"></span> EcuaNews · Noticias de Ecuador en tiempo real<br>
   <span style="color:rgba(255,255,255,.2);font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span>
 </footer>
+<div id="intModal" onclick="if(event.target===this)closeInterests()"><div class="intbox"><h3>Elige tus intereses</h3><p>"Para ti" mostrará primero estos temas. Se guardan solo en tu dispositivo y puedes cambiarlos o borrarlos cuando quieras.</p><div class="intgrid" id="intGrid"></div><div class="introw"><button onclick="clearInterests()">Borrar</button><button onclick="closeInterests()">Cancelar</button><button class="pri" onclick="saveInterests()">Guardar</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
+/* ═════════ ¿EL EQUIPO DIBUJA EMOJIS? (Windows 7 y similares no) ═════════ */
+const EMOJI_OK=(()=>{try{
+  const c=document.createElement('canvas');c.width=c.height=28;
+  const x=c.getContext('2d');x.textBaseline='top';x.font='22px sans-serif';x.fillText('\u{1F600}',0,0);
+  const d=x.getImageData(0,0,28,28).data;let col=0;
+  for(let i=0;i<d.length;i+=4){if(d[i+3]>0&&(Math.abs(d[i]-d[i+1])>25||Math.abs(d[i+1]-d[i+2])>25))col++;}
+  return col>6;
+}catch(e){return true;}})();
+const E=t=>EMOJI_OK?t:'';
 const API='https://ecual-backend.onrender.com/api';
 const PAGE_SIZE=30;
 const CAT_ICO={seguridad:'shield',politica:'landmark',economia:'dollar',transito:'car',salud:'health',deportes:'ball',tecnologia:'laptop',farandula:'star',general:'news'};
-function I(n,fill,cls){return `<svg class="i${fill?' f':''}${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;}
+const EMO={bell:'🔔',download:'⬇',share:'↗',refresh:'⟳',search:'🔍',find:'🔎',pin:'📍',tack:'📌',news:'📰',bookmark:'🔖',headphones:'🎧',stop:'⏹',shield:'🚔',landmark:'🏛️',dollar:'💰',car:'🚗',health:'🏥',ball:'⚽',laptop:'💻',star:'🌟',play:'▶',alert:'⚠️',mega:'📢',logo:'🦅'};
+const SVGALIAS={logo:'news',tack:'pin',find:'search'};
+function I(n,fill,cls){
+  if(EMOJI_OK&&EMO[n])return `<span class="emo${cls==='big'?' big':''}">${EMO[n]}</span>`;
+  const sv=SVGALIAS[n]||n;
+  return `<svg class="i${fill?' f':''}${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${sv}"/></svg>`;
+}
+function fillIcons(){document.querySelectorAll('.ic').forEach(el=>{
+  if(el.dataset.i)el.innerHTML=I(el.dataset.i);
+  else if(el.dataset.e)el.textContent=EMOJI_OK?el.dataset.e:'';
+});}
 function catIco(c){return I(CAT_ICO[c]||'news');}
 function imgFail(img,c){const p=img.parentElement;if(p)p.innerHTML=catIco(c);}
-function cl(t){return String(t||'').replace(/^\u{1F4FA}\s*/u,'');}
+function cl(t){t=String(t||'');return EMOJI_OK?t:t.replace(/^\u{1F4FA}\s*/u,'');}
 let ciudad='todas',cat='todas',pagina=0,totalNews=0,searchTimer=null,CUR=[];
 
 function timeAgo(iso){
@@ -266,17 +299,28 @@ async function fetchNews(loader=true){
   const q=document.getElementById('q').value.trim();
   if(loader)setContainer(`<div class="loadwrap"><div class="spinner"></div><div class="loadtxt">Cargando noticias…</div></div>`);
   try{
-    const params=new URLSearchParams({limit:PAGE_SIZE,offset:pagina*PAGE_SIZE});
+    const forYou=cat==='parati';
+    const params=new URLSearchParams({limit:forYou?80:PAGE_SIZE,offset:forYou?0:pagina*PAGE_SIZE});
     if(ciudad!=='todas')params.set('ciudad',ciudad);
-    if(cat!=='todas')params.set('categoria',cat);
+    if(cat!=='todas'&&!forYou)params.set('categoria',cat);
     if(q)params.set('q',q);
     const res=await fetch(`${API}/noticias?${params}`);
     if(!res.ok)throw new Error(`Error ${res.status}`);
     const data=await res.json();
-    totalNews=data.total||data.noticias?.length||0;
-    renderNews(data.noticias||[]);
+    let lista=data.noticias||[];
+    if(forYou){
+      const it=getInterests();
+      lista=lista.filter(n=>it.includes(n.categoria));
+      totalNews=lista.length;
+      renderNews(lista);
+      document.getElementById('pag').innerHTML='';
+      updateStatus(true,lista.length);
+      return;
+    }
+    totalNews=data.total||lista.length||0;
+    renderNews(lista);
     renderPag();
-    updateStatus(true,data.noticias?.length||0);
+    updateStatus(true,lista.length);
   }catch(e){
     updateStatus(false);
     setContainer(`<div class="empty"><div style="margin-bottom:12px">${I('alert',false,'big')}</div><p style="color:var(--mute)">${e.message}</p></div>`);
@@ -285,7 +329,7 @@ async function fetchNews(loader=true){
 
 function renderNews(noticias){
   if(!noticias.length){
-    setContainer(`<div class="empty"><div style="margin-bottom:12px">${I('search',false,'big')}</div><p style="color:var(--mute)">No hay noticias para este filtro.</p></div>`);
+    setContainer(`<div class="empty"><div style="margin-bottom:12px">${I('find',false,'big')}</div><p style="color:var(--mute)">No hay noticias para este filtro.</p></div>`);
     return;
   }
   const[top,...rest]=noticias;CUR=noticias;
@@ -296,7 +340,7 @@ function renderNews(noticias){
       <span class="stattxt">${VIEW==='saved'?`<strong>${noticias.length}</strong> noticias guardadas`:`Mostrando <strong>${noticias.length}</strong> de ${totalNews} noticias`}</span>${canTTS?`<button class="shbtn" id="btnHeads" onclick="speakHeadlines()">${I('headphones')} Escuchar titulares</button>`:''}
       <span class="stattxt">${new Date().toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'})}</span>
     </div>
-    <div class="seclbl">${I(cat==='farandula'?'star':'pin')} Más reciente</div>
+    <div class="seclbl">${I(cat==='farandula'?'star':'tack')} Más reciente</div>
     <a class="fcard${getFanClass(top)}" href="${top.url}" target="_blank" rel="noopener">
       <div class="fthumb">${th}</div>
       <div class="fbody">
@@ -350,14 +394,14 @@ function updateStatus(ok,count){
   const bar=document.getElementById('statusbar');
   if(!ok){bar.innerHTML=`<span class="stchip err"><span class="sdot"></span>Error de conexión</span>`;return;}
   if(!count){bar.innerHTML=`<span class="stchip load"><span class="sdot"></span>Cargando desde los medios…</span>`;return;}
-  bar.innerHTML=`<span class="stchip ok"><span class="sdot"></span>${totalNews} noticias · Actualiza cada 15 min</span>`;
+  bar.innerHTML=`<span class="stchip ok"><span class="sdot"></span>${E('✅ ')}${totalNews} noticias · Actualiza cada 15 min</span>`;
 }
 
 function goPage(p){pagina=p;window.scrollTo({top:0,behavior:'smooth'});fetchNews();}
 function setCity(c,btn){leaveSaved();ciudad=c;pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function setCat(c,btn){leaveSaved();cat=c;pagina=0;document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function debounceSearch(){leaveSaved();clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
-function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+' Actualizar';showToast('Actualizado');});}
+function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+' Actualizar';showToast(E('✅ ')+'Actualizado');});}
 function setContainer(h){document.getElementById('container').innerHTML=h;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
@@ -408,7 +452,7 @@ window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();deferredPrompt=e;
   if(!isStandalone)document.getElementById('btnInstall').style.display='inline-flex';
 });
-window.addEventListener('appinstalled',()=>{document.getElementById('btnInstall').style.display='none';showToast('EcuaNews instalada');});
+window.addEventListener('appinstalled',()=>{document.getElementById('btnInstall').style.display='none';showToast(E('✅ ')+'EcuaNews instalada');});
 if(isIOS&&!isStandalone)document.getElementById('btnInstall').style.display='inline-flex';
 function installApp(){
   if(deferredPrompt){
@@ -422,8 +466,8 @@ function installApp(){
 }
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 
-window.addEventListener('offline',()=>showToast('Sin conexión: verás las últimas noticias guardadas'));
-window.addEventListener('online',()=>{showToast('Conexión recuperada');fetchNews(false);});
+window.addEventListener('offline',()=>showToast(E('📴 ')+'Sin conexión: verás las últimas noticias guardadas'));
+window.addEventListener('online',()=>{showToast(E('✅ ')+'Conexión recuperada');fetchNews(false);});
 
 /* ═════════ ALERTAS DE ÚLTIMA HORA (push) ═════════ */
 function b64ToU8(b){const p='='.repeat((4-b.length%4)%4),r=(b+p).replace(/-/g,'+').replace(/_/g,'/'),raw=atob(r);return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));}
@@ -441,7 +485,7 @@ async function toggleAlertas(){
     if(cur){
       if(!confirm('¿Desactivar las alertas de última hora?'))return;
       await fetch(`${API}/push/unsubscribe`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:cur.endpoint})}).catch(()=>{});
-      await cur.unsubscribe();showToast('Alertas desactivadas');refreshBell();return;
+      await cur.unsubscribe();showToast(E('🔕 ')+'Alertas desactivadas');refreshBell();return;
     }
     const perm=await Notification.requestPermission();
     if(perm!=='granted'){showToast('Permiso de notificaciones denegado');return;}
@@ -453,7 +497,7 @@ async function toggleAlertas(){
     const r=await fetch(`${API}/push/subscribe`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub.toJSON(),ciudades})});
     if(!(await r.json()).ok)throw new Error('No se pudo guardar');
     fetch(`${API}/push/test`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})}).catch(()=>{});
-    showToast('Alertas activadas');refreshBell();
+    showToast(E('🔔 ')+'Alertas activadas');refreshBell();
   }catch(e){showToast('No se pudo activar: '+e.message);}
 }
 window.addEventListener('load',()=>setTimeout(refreshBell,800));
@@ -519,6 +563,36 @@ function speakHeadlines(){
 }
 if(canTTS)speechSynthesis.onvoiceschanged=()=>{};
 
+/* ═════════ NOTICIAS PERSONALIZADAS ("Para ti") ═════════ */
+const INT_KEY='ecua_interes_v1';
+const INT_CATS=[['seguridad','Seguridad'],['politica','Política'],['economia','Economía'],['transito','Tránsito'],['salud','Salud'],['deportes','Deportes'],['tecnologia','Tecnología'],['farandula','Farándula']];
+function getInterests(){try{return JSON.parse(localStorage.getItem(INT_KEY)||'[]');}catch(e){return [];}}
+function setForYou(btn){
+  if(!getInterests().length){openInterests(btn);return;}
+  leaveSaved();cat='parati';pagina=0;
+  document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  fetchNews();
+}
+function openInterests(){
+  const cur=getInterests();
+  document.getElementById('intGrid').innerHTML=INT_CATS.map(([id,l])=>`<button class="intopt${cur.includes(id)?' on':''}" data-id="${id}" onclick="this.classList.toggle('on')">${catIco(id)} ${l}</button>`).join('');
+  document.getElementById('intModal').classList.add('show');
+}
+function closeInterests(){document.getElementById('intModal').classList.remove('show');}
+function saveInterests(){
+  const sel=[...document.querySelectorAll('#intGrid .intopt.on')].map(b=>b.dataset.id);
+  if(!sel.length){showToast('Elige al menos un tema');return;}
+  try{localStorage.setItem(INT_KEY,JSON.stringify(sel));}catch(e){}
+  closeInterests();showToast(E('✅ ')+'Intereses guardados');
+  setForYou(document.getElementById('btnForYou'));
+}
+function clearInterests(){
+  try{localStorage.removeItem(INT_KEY);}catch(e){}
+  closeInterests();showToast('Intereses borrados');
+  if(cat==='parati'){cat='todas';pagina=0;document.querySelectorAll('.catb').forEach((b,k)=>b.classList.toggle('on',k===0));fetchNews();}
+}
+
+fillIcons();
 renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();
