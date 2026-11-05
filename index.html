@@ -405,6 +405,8 @@ function installApp(){
 }
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 
+window.addEventListener('offline',()=>showToast('📴 Sin conexión: verás las últimas noticias guardadas'));
+window.addEventListener('online',()=>{showToast('✅ Conexión recuperada');fetchNews(false);});
 renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();
