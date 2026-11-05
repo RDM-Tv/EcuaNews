@@ -6,7 +6,8 @@
 <title>EcuaNews — Noticias Ecuador</title>
 <meta name="description" content="Todas las noticias de Ecuador en un solo lugar: Quito, Guayaquil, Manta, Portoviejo y más.">
 <meta name="theme-color" content="#0B1120">
-<script>try{var _t=localStorage.getItem("ecua_theme");if(_t)document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
+<script>(function(){var t="light";try{t=localStorage.getItem("ecua_theme")||"light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -238,11 +239,59 @@ body{overflow-x:hidden}
 .wxt{font-family:'Sora',sans-serif;font-weight:800;min-width:38px;text-align:right}
 .wxm{color:var(--mute);font-size:11px;min-width:64px;text-align:right}
 .tcount{opacity:.6;font-weight:500;margin-left:4px}
+
+/* ── ancho 1200 + barra fecha/hora ── */
+.hi,.cbi,.cati,.ad-banner,footer,.main,.dbi{max-width:1200px}
+.datebar{background:#070B16;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dbi{margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:36px}
+.dbd{font-weight:700;font-size:13.5px;color:#F7F8FA;letter-spacing:.2px}
+.dbt{font-weight:800;font-size:17px;color:#F5C800;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.dbm-s{display:none}
+@media(max-width:600px){.dbm-l{display:none}.dbm-s{display:inline}.dbd{font-size:12.5px}.dbt{font-size:15px}}
+/* ── cabecera móvil: nombre siempre visible, botones en 2ª fila ── */
+@media(max-width:600px){
+  .hi{flex-direction:column;align-items:stretch;gap:6px;padding:8px 0}
+  .logo{justify-content:flex-start}
+  .logo-txt{display:block!important}
+  .hright{width:100%;justify-content:space-between;flex-wrap:nowrap}
+  .hright .btnico,.hright .btnact{flex:1;justify-content:center;padding:8px 4px}
+}
+/* ── publicidad ── */
+.adcard{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(160deg,var(--deep),var(--mid));border:1px solid var(--bd2);border-radius:12px;text-decoration:none;color:var(--fg);padding:14px 10px;text-align:center}
+.adcard.free{border-style:dashed}
+.adtag{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.adico{width:48px;height:48px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:24px}
+.adcard img{max-width:100%;max-height:200px;border-radius:8px;object-fit:cover}
+.adn{font-family:'Sora',sans-serif;font-weight:800;font-size:15px;line-height:1.25}
+.adt{font-size:12px;color:var(--mute);line-height:1.45}
+.adcta{background:var(--am);color:var(--onam);font-weight:700;font-size:12px;border-radius:6px;padding:7px 14px;margin-top:4px}
+.rail{display:none;position:fixed;top:84px;width:160px;z-index:40}
+.rail .adcard{min-height:600px;justify-content:center}
+@media(min-width:1580px) and (min-height:720px){.rail{display:block}#railL{left:calc(50% - 600px - 176px)}#railR{right:calc(50% - 600px - 176px)}}
+@media(min-width:1900px) and (min-height:720px){.rail{width:300px}#railL{left:calc(50% - 600px - 316px)}#railR{right:calc(50% - 600px - 316px)}}
+.adwrap{grid-column:1/-1;margin:6px 0}
+.adlbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--mute);text-align:center;margin-bottom:3px}
+.adcard.inline{flex-direction:row;justify-content:center;text-align:left;gap:14px;padding:12px 16px;flex-wrap:wrap}
+.adcard.inline .adico{flex-shrink:0}
+.adcard.inline img{max-height:70px}
+.foot-links a{color:var(--mute);text-decoration:underline;margin:0 6px}
+/* ── cuenta ── */
+#acctModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+#acctModal.show{display:flex}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;background:transparent;border:1px solid var(--bd2);color:var(--mute);border-radius:8px;padding:8px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer}
+.tabs button.on{background:var(--am);border-color:var(--am);color:var(--onam)}
+.fld{width:100%;background:var(--bg);border:1px solid var(--bd2);color:var(--fg);border-radius:8px;padding:11px 12px;font-family:'Sora',sans-serif;font-size:14px;margin-bottom:10px;outline:none}
+.fld:focus{border-color:var(--am)}
+.amsg{font-size:12.5px;min-height:18px;margin:2px 0 10px;line-height:1.4}
+.amsg.err{color:var(--red)}.amsg.ok{color:var(--grn)}
+.acct-mail{font-weight:700;font-size:14px;word-break:break-all;margin:6px 0 12px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol><symbol id="i-dollar" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol><symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol><symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol><symbol id="i-dollar" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol><symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol></svg>
 
+<div class="datebar"><div class="dbi"><div class="dbd" id="dbDate">&nbsp;</div><div class="dbt" id="dbTime">--:--:--</div></div></div>
 <header>
   <div class="hi">
     <a class="logo" href="#">
@@ -258,6 +307,7 @@ body{overflow-x:hidden}
       <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><span class="ic" data-i="bell"></span><span class="lbl"> Alertas</span></button>
       <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><span class="ic" data-i="download"></span><span class="lbl"> Instalar</span></button>
       <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
+      <button class="btnico" id="btnAcct" onclick="openAcct()" style="display:none" title="Mi cuenta"><span class="ic" data-i="user"></span><span class="lbl" id="acctLbl"> Ingresar</span></button>
       <button class="btnico" id="btnTheme" onclick="toggleTheme()" title="Cambiar entre tema claro y oscuro"><span class="ic" data-i="moon"></span><span class="lbl"> Tema</span></button>
       <button class="btnact" id="btnRef" onclick="reload()"><span class="ic" data-i="refresh"></span><span class="lbl"> Actualizar</span></button>
     </div>
@@ -320,9 +370,11 @@ body{overflow-x:hidden}
 
 <footer>
   <span class="ic" data-i="logo"></span> EcuaNews · Noticias de Ecuador en tiempo real<br>
-  <span style="color:var(--mute);opacity:.7;font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span>
+  <span style="color:var(--mute);opacity:.7;font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span><br>
+  <span class="foot-links"><a href="privacidad.html">Política de privacidad</a><a href="javascript:void(0)" onclick="adContact()">Anunciar en EcuaNews</a></span>
 </footer>
 <div id="intModal" onclick="if(event.target===this)closeInterests()"><div class="intbox"><h3>Elige tus intereses</h3><p>"Para ti" mostrará primero estos temas. Se guardan solo en tu dispositivo y puedes cambiarlos o borrarlos cuando quieras.</p><div class="intgrid" id="intGrid"></div><div class="introw"><button onclick="clearInterests()">Borrar</button><button onclick="closeInterests()">Cancelar</button><button class="pri" onclick="saveInterests()">Guardar</button></div></div></div>
+<div id="acctModal" onclick="if(event.target===this)closeAcct()"><div class="intbox" id="acctBox"></div></div>
 <div id="briefModal" onclick="if(event.target===this)closeBrief()"><div class="briefbox" id="briefBox"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -339,7 +391,7 @@ const E=t=>EMOJI_OK?t:'';
 const API='https://ecual-backend.onrender.com/api';
 const PAGE_SIZE=30;
 const CAT_ICO={seguridad:'shield',politica:'landmark',economia:'dollar',transito:'car',salud:'health',deportes:'ball',tecnologia:'laptop',farandula:'star',general:'news'};
-const EMO={sun:'☀️',moon:'🌙',bell:'🔔',download:'⬇',share:'↗',refresh:'⟳',search:'🔍',find:'🔎',pin:'📍',tack:'📌',news:'📰',bookmark:'🔖',headphones:'🎧',stop:'⏹',shield:'🚔',landmark:'🏛️',dollar:'💰',car:'🚗',health:'🏥',ball:'⚽',laptop:'💻',star:'🌟',play:'▶',alert:'⚠️',mega:'📢',logo:'🦅'};
+const EMO={user:'👤',sun:'☀️',moon:'🌙',bell:'🔔',download:'⬇',share:'↗',refresh:'⟳',search:'🔍',find:'🔎',pin:'📍',tack:'📌',news:'📰',bookmark:'🔖',headphones:'🎧',stop:'⏹',shield:'🚔',landmark:'🏛️',dollar:'💰',car:'🚗',health:'🏥',ball:'⚽',laptop:'💻',star:'🌟',play:'▶',alert:'⚠️',mega:'📢',logo:'🦅'};
 const SVGALIAS={logo:'news',tack:'pin',find:'search'};
 function I(n,fill,cls){
   if(EMOJI_OK&&EMO[n])return `<span class="emo${cls==='big'?' big':''}">${EMO[n]}</span>`;
@@ -444,14 +496,7 @@ function renderNews(noticias){
           <div class="nsrc">${timeAgo(n.publicado_en)}${acts(i+1,n)}</div>
         </div>
       </a>`;
-      /* AD cada 10 noticias — descomenta cuando tengas AdSense aprobado
-      if((i+1)%10===0){
-        html+=`<div class="ad-inline">
-          <div class="ad-label">Publicidad</div>
-          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          <script>(adsbygoogle=window.adsbygoogle||[]).push({});<\/script>
-        </div>`;
-      }*/
+      if((i+1)%8===0)html+=adInline();
     });
     html+=`</div>`;
   }
@@ -475,7 +520,7 @@ function updateStatus(ok,count){
 }
 
 function goPage(p){pagina=p;window.scrollTo({top:0,behavior:'smooth'});fetchNews();}
-function setCity(c,btn){leaveSaved();ciudad=c;pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
+function setCity(c,btn){leaveSaved();ciudad=c;syncProfileSoon();pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function setCat(c,btn){leaveSaved();cat=c;pagina=0;document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
 function debounceSearch(){leaveSaved();clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
 function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+'<span class="lbl"> Actualizar</span>';showToast(E('✅ ')+'Actualizado');});}
@@ -596,8 +641,8 @@ function toggleFav(ev,i){
   ev.preventDefault();ev.stopPropagation();
   const n=CUR[i];if(!n)return;
   let favs=getFavs();
-  if(favs.some(f=>f.id===n.id)){favs=favs.filter(f=>f.id!==n.id);setFavs(favs);showToast('Quitada de guardadas');}
-  else{favs.unshift({id:n.id,titulo:n.titulo,resumen:n.resumen,url:n.url,fuente_nombre:n.fuente_nombre,tipo:n.tipo,ciudad_label:n.ciudad_label,categoria:n.categoria,img_url:n.img_url,publicado_en:n.publicado_en});setFavs(favs);showToast('Guardada para leer después');}
+  if(favs.some(f=>f.id===n.id)){favs=favs.filter(f=>f.id!==n.id);setFavs(favs);showToast('Quitada de guardadas');syncFav(n,false);}
+  else{favs.unshift({id:n.id,titulo:n.titulo,resumen:n.resumen,url:n.url,fuente_nombre:n.fuente_nombre,tipo:n.tipo,ciudad_label:n.ciudad_label,categoria:n.categoria,img_url:n.img_url,publicado_en:n.publicado_en});setFavs(favs);showToast('Guardada para leer después');syncFav(n,true);}
   if(VIEW==='saved')renderSaved();else{const b=ev.currentTarget,f=isFav(n.id);b.classList.toggle('on',f);b.innerHTML=I('bookmark',f)+'<span class="lb"> '+(f?'Guardada':'Guardar')+'</span>';}
 }
 function renderSaved(){
@@ -662,12 +707,12 @@ function saveInterests(){
   const sel=[...document.querySelectorAll('#intGrid .intopt.on')].map(b=>b.dataset.id);
   if(!sel.length){showToast('Elige al menos un tema');return;}
   try{localStorage.setItem(INT_KEY,JSON.stringify(sel));}catch(e){}
-  closeInterests();showToast(E('✅ ')+'Intereses guardados');
+  syncProfileSoon();closeInterests();showToast(E('✅ ')+'Intereses guardados');
   setForYou(document.getElementById('btnForYou'));
 }
 function clearInterests(){
   try{localStorage.removeItem(INT_KEY);}catch(e){}
-  closeInterests();showToast('Intereses borrados');
+  syncProfileSoon();closeInterests();showToast('Intereses borrados');
   if(cat==='parati'){cat='todas';pagina=0;document.querySelectorAll('.catb').forEach((b,k)=>b.classList.toggle('on',k===0));fetchNews();}
 }
 
@@ -733,6 +778,7 @@ function renderPortada(noticias){
           <div class="ntitle">${cl(n.titulo)}</div>
           <div class="nsrc">${timeAgo(n.publicado_en)}${acts(i+4,n)}</div>
         </div></a>`;
+      if((i+1)%8===0)html+=adInline();
     });
     html+=`</div>`;
   }
@@ -866,11 +912,186 @@ function toggleTheme(){
   applyThemeUI();
 }
 
+/* ═════════ FECHA Y HORA (Ecuador) ═════════ */
+function tickClock(){
+  const d=new Date(),tz='America/Guayaquil';
+  const wd=new Intl.DateTimeFormat('es-EC',{weekday:'long',timeZone:tz}).format(d);
+  const day=new Intl.DateTimeFormat('es-EC',{day:'numeric',timeZone:tz}).format(d);
+  const ml=new Intl.DateTimeFormat('es-EC',{month:'long',timeZone:tz}).format(d);
+  const ms=ml.slice(0,3);
+  const W=wd.charAt(0).toUpperCase()+wd.slice(1);
+  const el=document.getElementById('dbDate');
+  if(el)el.innerHTML=`${W} ${day} de <span class="dbm-l">${ml}</span><span class="dbm-s">${ms}.</span>`;
+  const t=document.getElementById('dbTime');
+  if(t)t.textContent=new Intl.DateTimeFormat('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:tz}).format(d);
+}
+tickClock();setInterval(tickClock,1000);
+
+/* ═════════ PUBLICIDAD (todo listo para activarse) ═════════
+   Hay 3 formas de ganar dinero; configura lo que uses:
+   1) Anuncios directos de negocios:   agrega objetos a ADS.casa  → se rotan en barras laterales y entre noticias.
+   2) Google AdSense (cuando lo aprueben): enabled:true + tu client + los slots de cada formato.
+   3) Mientras tanto se muestra "Tu marca aquí" con botón a tu WhatsApp (CONTACT_WA, arriba). */
+const ADS={
+  adsense:{enabled:false,client:'ca-pub-XXXXXXXXXXXXXXXX',slots:{rail:'XXXXXXXXXX',inline:'XXXXXXXXXX'}},
+  casa:[
+    // {nombre:'Pizzería Don Luis',texto:'2x1 los martes en Manta',url:'https://wa.me/593999999999',img:'',cta:'Pedir ahora'},
+  ],
+};
+let adN=0;
+function adCard(kind){
+  const list=ADS.casa||[];
+  if(list.length){
+    const a=list[adN++%list.length];
+    const media=a.img?`<img src="${esc(a.img)}" alt="">`:`<div class="adico">${I('mega')}</div>`;
+    return `<a class="adcard ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><div class="adtag">Publicidad</div>${media}<div><div class="adn">${esc(a.nombre)}</div><div class="adt">${esc(a.texto)}</div></div><span class="adcta">${esc(a.cta||'Ver más')}</span></a>`;
+  }
+  return `<a class="adcard free ${kind}" href="${adWaUrl()}" target="_blank" rel="noopener"><div class="adtag">Espacio publicitario</div><div class="adico">${I('mega')}</div><div><div class="adn">Tu marca aquí</div><div class="adt">Llega a miles de lectores en Ecuador cada día.</div></div><span class="adcta">Anunciar</span></a>`;
+}
+function adWaUrl(){return `https://wa.me/${CONTACT_WA}?text=`+encodeURIComponent('Hola, quiero anunciar mi negocio en EcuaNews. ¿Qué espacios y precios tienen?');}
+function adContact(){window.open(adWaUrl(),'_blank','noopener');}
+function adSlot(kind){
+  const A=ADS.adsense;
+  if(A.enabled&&A.slots[kind]){
+    if(kind==='rail'){const w=innerWidth>=1900?300:160;return `<ins class="adsbygoogle" style="display:inline-block;width:${w}px;height:600px" data-ad-client="${A.client}" data-ad-slot="${A.slots.rail}"></ins>`;}
+    return `<ins class="adsbygoogle" style="display:block" data-ad-client="${A.client}" data-ad-slot="${A.slots[kind]}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+  }
+  return adCard(kind);
+}
+function adInline(){return `<div class="adwrap"><div class="adlbl">Publicidad</div>${adSlot('inline')}</div>`;}
+function pushAds(){
+  if(!ADS.adsense.enabled)return;
+  document.querySelectorAll('ins.adsbygoogle:not([data-done])').forEach(el=>{el.setAttribute('data-done','1');try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});
+}
+let railOn=false;
+function renderRails(){
+  const want=innerWidth>=1580&&innerHeight>=720;
+  if(want===railOn)return;
+  railOn=want;
+  ['railL','railR'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=want?adSlot('rail'):'';});
+  pushAds();
+}
+function startAds(){
+  if(ADS.adsense.enabled){const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS.adsense.client;document.head.appendChild(sc);}
+  renderRails();
+  window.addEventListener('load',()=>{railOn=false;renderRails();});
+  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderRails,250);});
+  if((ADS.casa||[]).length>1)setInterval(()=>{if(railOn){railOn=false;renderRails();}},45000);
+}
+const _setContainer=setContainer;
+setContainer=function(h){_setContainer(h);pushAds();};
+
+/* ═════════ CUENTAS DE USUARIO (Supabase Auth) ═════════ */
+let sb=null,USER=null,acctMode='in',syncT=null;
+async function initAuth(){
+  try{
+    if(!window.supabase)return;
+    const r=await fetch(`${API}/config`);if(!r.ok)return;
+    const c=await r.json();if(!c.supabaseUrl||!c.supabaseAnonKey)return;
+    sb=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+    document.getElementById('btnAcct').style.display='';
+    const {data}=await sb.auth.getSession();
+    setUser(data.session?data.session.user:null);
+    sb.auth.onAuthStateChange((ev,sess)=>{setTimeout(()=>setUser(sess?sess.user:null),0);});
+  }catch(e){}
+}
+function setUser(u){
+  const prev=USER?USER.id:null;USER=u;
+  const l=document.getElementById('acctLbl');if(l)l.textContent=u?' Mi cuenta':' Ingresar';
+  const b=document.getElementById('btnAcct');if(b)b.classList.toggle('on',!!u);
+  if(u&&u.id!==prev)syncDown();
+}
+function openAcct(){renderAcct('');document.getElementById('acctModal').classList.add('show');}
+function closeAcct(){document.getElementById('acctModal').classList.remove('show');}
+function renderAcct(msg,cls){
+  const box=document.getElementById('acctBox');
+  if(USER){
+    box.innerHTML=`<h3>Mi cuenta</h3><p>Tus noticias guardadas, intereses y ciudad se sincronizan en todos tus dispositivos.</p><div class="acct-mail">${esc(USER.email)}</div><div class="amsg ${cls||''}">${esc(msg||'')}</div><div class="introw"><button onclick="closeAcct()">Cerrar</button><button class="pri" onclick="acctSignOut()">Cerrar sesión</button></div>`;
+    return;
+  }
+  box.innerHTML=`<h3>${acctMode==='up'?'Crear cuenta':'Ingresar'}</h3><p>Con una cuenta guardas tus favoritos, intereses y ciudad, y los ves en cualquier dispositivo. Es gratis.</p>
+    <div class="tabs"><button class="${acctMode==='in'?'on':''}" onclick="acctMode='in';renderAcct('')">Ingresar</button><button class="${acctMode==='up'?'on':''}" onclick="acctMode='up';renderAcct('')">Crear cuenta</button></div>
+    <input class="fld" id="acEmail" type="email" placeholder="Correo electrónico" autocomplete="email">
+    <input class="fld" id="acPass" type="password" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="${acctMode==='up'?'new-password':'current-password'}" onkeydown="if(event.key==='Enter')acctSubmit()">
+    <div class="amsg ${cls||''}" id="acMsg">${esc(msg||'')}</div>
+    <div class="introw"><button onclick="closeAcct()">Cancelar</button><button class="pri" id="acGo" onclick="acctSubmit()">${acctMode==='up'?'Crear cuenta':'Ingresar'}</button></div>`;
+}
+function acctErr(m){
+  m=String(m||'');
+  if(/invalid login/i.test(m))return 'Correo o contraseña incorrectos.';
+  if(/already registered|already been registered/i.test(m))return 'Ese correo ya tiene una cuenta. Usa "Ingresar".';
+  if(/at least 6/i.test(m))return 'La contraseña debe tener al menos 6 caracteres.';
+  if(/valid email|invalid.*email/i.test(m))return 'Escribe un correo válido.';
+  if(/rate limit|too many/i.test(m))return 'Demasiados intentos. Espera unos minutos.';
+  if(/not confirmed/i.test(m))return 'Debes confirmar tu correo antes de ingresar.';
+  return 'No se pudo completar: '+m;
+}
+async function acctSubmit(){
+  if(!sb)return;
+  const email=document.getElementById('acEmail').value.trim(),password=document.getElementById('acPass').value;
+  if(!email||!password){renderAcct('Escribe tu correo y contraseña.','err');document.getElementById('acEmail').value=email;return;}
+  const go=document.getElementById('acGo');if(go){go.disabled=true;go.textContent='Un momento…';}
+  try{
+    if(acctMode==='up'){
+      const {data,error}=await sb.auth.signUp({email,password});
+      if(error)throw error;
+      if(!data.session){renderAcct('Cuenta creada. Revisa tu correo para confirmarla y luego ingresa.','ok');acctMode='in';return;}
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email,password});
+      if(error)throw error;
+    }
+    closeAcct();showToast(E('✅ ')+'Sesión iniciada');
+  }catch(e){renderAcct(acctErr(e.message),'err');const em=document.getElementById('acEmail');if(em)em.value=email;}
+}
+async function acctSignOut(){
+  try{await sb.auth.signOut();}catch(e){}
+  setUser(null);closeAcct();showToast('Sesión cerrada');
+}
+async function syncDown(){
+  if(!sb||!USER)return;
+  try{
+    // perfil
+    const {data:p}=await sb.from('perfiles').select('ciudad,intereses').eq('user_id',USER.id).maybeSingle();
+    const localInt=getInterests();
+    if(p&&p.intereses&&p.intereses.length){try{localStorage.setItem(INT_KEY,JSON.stringify(p.intereses));}catch(e){}}
+    else if(localInt.length)await syncProfile();
+    if(p&&p.ciudad&&p.ciudad!==ciudad&&ciudad==='todas'){
+      const btn=[...document.querySelectorAll('.cb')].find(b=>(b.getAttribute('onclick')||'').includes(`'${p.ciudad}'`));
+      if(btn)setCity(p.ciudad,btn);
+    }
+    // favoritos
+    const {data:rows}=await sb.from('favoritos').select('news_id,data,creado_en').eq('user_id',USER.id).order('creado_en',{ascending:false}).limit(100);
+    const remote=(rows||[]).map(r=>r.data).filter(Boolean);
+    const local=getFavs(),ids=new Set(remote.map(f=>f.id));
+    const onlyLocal=local.filter(f=>!ids.has(f.id));
+    if(onlyLocal.length)await sb.from('favoritos').upsert(onlyLocal.map(f=>({user_id:USER.id,news_id:f.id,data:f})));
+    setFavs([...onlyLocal,...remote].slice(0,100));
+    if(VIEW==='saved')renderSaved();
+    showToast(E('🔄 ')+'Cuenta sincronizada');
+  }catch(e){}
+}
+async function syncProfile(){
+  if(!sb||!USER)return;
+  try{await sb.from('perfiles').upsert({user_id:USER.id,ciudad,intereses:getInterests(),actualizado_en:new Date().toISOString()});}catch(e){}
+}
+function syncProfileSoon(){if(!USER)return;clearTimeout(syncT);syncT=setTimeout(syncProfile,900);}
+async function syncFav(n,add){
+  if(!sb||!USER)return;
+  try{
+    if(add)await sb.from('favoritos').upsert({user_id:USER.id,news_id:n.id,data:{id:n.id,titulo:n.titulo,resumen:n.resumen,url:n.url,fuente_nombre:n.fuente_nombre,tipo:n.tipo,ciudad_label:n.ciudad_label,categoria:n.categoria,img_url:n.img_url,publicado_en:n.publicado_en}});
+    else await sb.from('favoritos').delete().eq('user_id',USER.id).eq('news_id',n.id);
+  }catch(e){}
+}
+window.addEventListener('load',initAuth);
+
 fillIcons();
 applyThemeUI();
+startAds();
 renderSponsor();
 setInterval(()=>fetchNews(false),10*60*1000);
 fetchNews();
 </script>
+<aside class="rail" id="railL" aria-label="Publicidad"></aside>
+<aside class="rail" id="railR" aria-label="Publicidad"></aside>
 </body>
 </html>

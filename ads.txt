@@ -1,0 +1,4 @@
+# Cuando Google AdSense apruebe tu sitio, reemplaza la línea de abajo con tu Publisher ID
+# (lo ves en AdSense → Cuenta → Información de la cuenta) y quita el "#" del inicio.
+# Este archivo debe estar en la RAÍZ de tu dominio propio (ej. https://tudominio.com/ads.txt).
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
