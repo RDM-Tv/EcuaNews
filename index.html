@@ -6,6 +6,7 @@
 <title>EcuaNews — Noticias Ecuador</title>
 <meta name="description" content="Todas las noticias de Ecuador en un solo lugar: Quito, Guayaquil, Manta, Portoviejo y más.">
 <meta name="theme-color" content="#0B1120">
+<script src="ads.js"></script>
 <script>(function(){var t="light";try{t=localStorage.getItem("ecua_theme")||"light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
@@ -388,6 +389,20 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
   .brief .bgo{display:none}
 }
 @media(max-width:380px){.logo-txt .name{font-size:18px}}
+
+/* subbar de dos filas */
+.sbi{min-height:44px}
+.sbcats{border-top:1px solid var(--bd);max-height:48px;overflow:hidden;transition:max-height .22s ease,border-color .22s}
+.sbc-in{max-width:1200px;margin:0 auto;padding:0 16px}
+.subbar.cat-hide .sbcats{max-height:0;border-top-color:transparent}
+.catrow{width:100%}
+.catrow .catb{padding:12px 13px}
+.trend{top:calc(var(--hh,58px) + var(--sbh,92px) + 12px)}
+@media(max-width:760px){.sbcats{display:none}}
+
+.adcard.adimg{padding:0;border:none;background:transparent;display:block}
+.adcard.adimg img{display:block;width:100%;height:auto;max-height:none;border-radius:10px}
+.rail .adcard.adimg{min-height:0}
 </style>
 </head>
 <body>
@@ -409,7 +424,7 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
       <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><span class="ic" data-i="bell"></span><span class="lbl"> Alertas</span></button>
       <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><span class="ic" data-i="download"></span><span class="lbl"> Instalar</span></button>
       <button class="btnico" id="btnShare" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
-      <button class="btnico" id="btnAcct" onclick="openAcct()" style="display:none" title="Mi cuenta"><span class="ic" data-i="user"></span><span class="lbl" id="acctLbl"> Ingresar</span></button>
+      <button class="btnico" id="btnAcct" onclick="openAcct()" title="Mi cuenta"><span class="ic" data-i="user"></span><span class="lbl" id="acctLbl"> Ingresar</span></button>
       <button class="btnico" id="btnTheme" onclick="toggleTheme()" title="Cambiar entre tema claro y oscuro"><span class="ic" data-i="moon"></span><span class="lbl"> Tema</span></button>
       <button class="btnact" id="btnRef" onclick="reload()" title="Actualizar noticias"><span class="ic" data-i="refresh"></span><span class="lbl"> Actualizar</span></button>
       <button class="btnico hamb" id="btnMenu" onclick="openDrawer()" aria-label="Abrir menú"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
@@ -425,7 +440,7 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
   <div class="sdate"><span class="sd-d" id="dbDate">&nbsp;</span><span class="sd-t" id="dbTime">--:--:--</span></div>
   <div class="snav" id="snav"></div>
   <div class="sstat" id="sbStatus"><div class="statusbar" id="statusbar"><span class="stchip load"><span class="sdot"></span>Conectando…</span></div></div>
-</div></div>
+</div><div class="sbcats" id="sbCats"><div class="sbc-in" id="sbCatsIn"></div></div></div>
 
 <!-- BANNER AD — HORIZONTAL (728x90 leaderboard) -->
 <!-- Descomenta cuando Google apruebe tu cuenta AdSense
@@ -623,15 +638,15 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
    Ciudad sin patrocinador muestra "Anuncia aquí" (invitación a anunciar). */
 const CONTACT_WA='593000000000'; // ← CAMBIAR por tu WhatsApp (593 + número sin 0)
 const APP_URL='https://rdm-tv.github.io/EcuaNews/';
-const SPONSORS={
+const SPONSORS=Object.assign({},window.ADS_SPONSORS||{},{
   // manta:{nombre:'Nombre del negocio',texto:'Promoción o eslogan corto',url:'https://wa.me/593999999999',img:''},
   // guayaquil:{nombre:'',texto:'',url:'',img:''},
-};
+});
 const CITY_NAMES={todas:'todo Ecuador',quito:'Quito',guayaquil:'Guayaquil',manta:'Manta',portoviejo:'Portoviejo','santo domingo':'Santo Domingo',cuenca:'Cuenca',ambato:'Ambato',loja:'Loja',esmeraldas:'Esmeraldas',machala:'Machala',ibarra:'Ibarra'};
 function esc(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function renderSponsor(){
   const el=document.getElementById('sponsorSlot');if(!el)return;
-  const sp=SPONSORS[ciudad];
+  const sp=SPONSORS[ciudad]||SPONSORS.todas;
   if(sp&&sp.nombre){
     const ico=sp.img?`<img src="${esc(sp.img)}" alt="">`:`<div class="sp-ico">${I('mega')}</div>`;
     el.innerHTML=`<a class="sponsor" href="${esc(sp.url)}" target="_blank" rel="sponsored noopener">${ico}<div class="sp-body"><div class="sp-tag">Patrocinado</div><div class="sp-name">${esc(sp.nombre)}</div><div class="sp-txt">${esc(sp.texto)}</div></div><span class="sp-cta">Ver</span></a>`;
@@ -1022,15 +1037,15 @@ tickClock();setInterval(tickClock,1000);
    3) Mientras tanto se muestra "Tu marca aquí" con botón a tu WhatsApp (CONTACT_WA, arriba). */
 const ADS={
   adsense:{enabled:false,client:'ca-pub-XXXXXXXXXXXXXXXX',slots:{rail:'XXXXXXXXXX',inline:'XXXXXXXXXX'}},
-  casa:[
-    // {nombre:'Pizzería Don Luis',texto:'2x1 los martes en Manta',url:'https://wa.me/593999999999',img:'',cta:'Pedir ahora'},
-  ],
+  casa:(window.ADS_CASA||[]),   // ← se edita en el archivo ads.js
 };
 let adN=0;
 function adCard(kind){
   const list=ADS.casa||[];
   if(list.length){
     const a=list[adN++%list.length];
+    const full=kind==='rail'?a.railImg:a.inlineImg;     // creatividad completa (imagen que ya trae todo el diseño)
+    if(full)return `<a class="adcard adimg ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener" title="${esc(a.nombre||'Publicidad')}"><img src="${esc(full)}" alt="${esc(a.nombre||'Publicidad')}"></a>`;
     const media=a.img?`<img src="${esc(a.img)}" alt="">`:`<div class="adico">${I('mega')}</div>`;
     return `<a class="adcard ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><div class="adtag">Publicidad</div>${media}<div><div class="adn">${esc(a.nombre)}</div><div class="adt">${esc(a.texto)}</div></div><span class="adcta">${esc(a.cta||'Ver más')}</span></a>`;
   }
@@ -1073,15 +1088,14 @@ setContainer=function(h){_setContainer(h);renderSponsor();pushAds();};
 let sb=null,USER=null,acctMode='in',syncT=null;
 async function initAuth(){
   try{
-    if(!window.supabase)return;
-    const r=await fetch(`${API}/config`);if(!r.ok)return;
-    const c=await r.json();if(!c.supabaseUrl||!c.supabaseAnonKey)return;
+    if(!window.supabase){console.warn('Cuentas: no cargó la librería de Supabase');return;}
+    const r=await fetch(`${API}/config`);if(!r.ok){console.warn('Cuentas: el servidor aún no tiene /api/config (sube el backend)');return;}
+    const c=await r.json();if(!c.supabaseUrl||!c.supabaseAnonKey){console.warn('Cuentas: faltan SUPABASE_URL / SUPABASE_ANON_KEY en Render');return;}
     sb=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true}});
-    document.getElementById('btnAcct').style.display='';
     const {data}=await sb.auth.getSession();
     setUser(data.session?data.session.user:null);
     sb.auth.onAuthStateChange((ev,sess)=>{setTimeout(()=>setUser(sess?sess.user:null),0);});
-  }catch(e){}
+  }catch(e){console.warn('Cuentas no disponibles:',e&&e.message);}
 }
 function setUser(u){
   const prev=USER?USER.id:null;USER=u;
@@ -1093,6 +1107,7 @@ function openAcct(){renderAcct('');document.getElementById('acctModal').classLis
 function closeAcct(){document.getElementById('acctModal').classList.remove('show');}
 function renderAcct(msg,cls){
   const box=document.getElementById('acctBox');
+  if(!sb){box.innerHTML=`<h3>Cuentas de usuario</h3><p>El servicio de cuentas no está disponible por ahora. Puedes seguir usando EcuaNews con normalidad: tus noticias guardadas e intereses se conservan en este dispositivo.</p><div class="introw"><button class="pri" onclick="closeAcct()">Entendido</button></div>`;return;}
   if(USER){
     box.innerHTML=`<h3>Mi cuenta</h3><p>Tus noticias guardadas, intereses y ciudad se sincronizan en todos tus dispositivos.</p><div class="acct-mail">${esc(USER.email)}</div><div class="amsg ${cls||''}">${esc(msg||'')}</div><div class="introw"><button onclick="closeAcct()">Cerrar</button><button class="pri" onclick="acctSignOut()">Cerrar sesión</button></div>`;
     return;
@@ -1193,7 +1208,7 @@ function placeNav(){
     const dr=document.getElementById('drActions');ACT_IDS.forEach(id=>{const b=document.getElementById(id);if(b)dr.appendChild(b);});
     document.getElementById('drStatus').appendChild(st);
   }else{
-    const sn=document.getElementById('snav');sn.appendChild(cityW);sn.appendChild(catRow);
+    document.getElementById('snav').appendChild(cityW);document.getElementById('sbCatsIn').appendChild(catRow);
     const h=document.getElementById('hActs'),menu=document.getElementById('btnMenu');
     ACT_IDS.forEach(id=>{const b=document.getElementById(id);if(b)h.insertBefore(b,menu);});
     document.getElementById('sbStatus').appendChild(st);
@@ -1201,7 +1216,20 @@ function placeNav(){
   }
   setHH();
 }
-function setHH(){const h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hh',h.offsetHeight+'px');}
+function setHH(){
+  const h=document.querySelector('header'),b=document.getElementById('subbar'),r=document.documentElement.style;
+  if(h)r.setProperty('--hh',h.offsetHeight+'px');
+  if(b)r.setProperty('--sbh',b.offsetHeight+'px');
+}
+(function(){ // las categorías se ocultan al bajar y reaparecen al subir
+  let last=window.scrollY||0;
+  window.addEventListener('scroll',()=>{
+    const y=window.scrollY||0,b=document.getElementById('subbar');if(!b)return;
+    if(y>last+6&&y>180)b.classList.add('cat-hide');
+    else if(y<last-6||y<120)b.classList.remove('cat-hide');
+    last=y;
+  },{passive:true});
+})();
 function openDrawer(){
   document.getElementById('drawer').classList.add('open');document.getElementById('drawerOv').classList.add('show');
   document.body.style.overflow='hidden';loadTrends();loadWeather();
@@ -1227,7 +1255,7 @@ document.addEventListener('click',e=>{
 });
 buildNav();placeNav();
 if(MQ.addEventListener)MQ.addEventListener('change',placeNav);
-if(window.ResizeObserver)new ResizeObserver(setHH).observe(document.querySelector('header'));
+if(window.ResizeObserver){const ro=new ResizeObserver(setHH);ro.observe(document.querySelector('header'));ro.observe(document.getElementById('subbar'));}
 window.addEventListener('resize',setHH);window.addEventListener('load',setHH);
 
 fillIcons();
