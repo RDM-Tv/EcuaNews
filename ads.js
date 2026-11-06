@@ -6,6 +6,7 @@
    1) Sube tus logos/imágenes al repo, en una carpeta llamada  ads
       (OJO: GitHub distingue mayúsculas: "Logo-MedicOs.svg" ≠ "logo-medicos.svg")
    2) Agrega un bloque {...} dentro de ADS_CASA, copiando el de MedicOs y cambiando los textos.
+      ("imagen" = ilustración principal del banner; "logo" = alternativa si solo tienes un logo)
    3) Haz Commit. En 1–2 minutos ya se ve (si no, recarga dos veces).
 
    DOS FORMAS DE HACER UN ANUNCIO
@@ -27,7 +28,8 @@ window.ADS_CASA = [
   {
     nombre: 'MedicOs',
     url:    'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',
-    logo:   'ads/Logo-MedicOs.svg',     // ← sube este archivo a la carpeta ads
+    imagen: 'ads/medicos-doctor.png',   // ← ilustración del doctor (sube este archivo a la carpeta ads)
+    // logo: 'ads/Logo-MedicOs.svg',    // (opcional) si no usas "imagen", se muestra este logo
     color:  '#0056b3',
     rail:   { titulo: 'Tu salud\nen orden',                     subtitulo: 'Gestiona tu consulta médica digital', boton: 'Agendar Cita' },
     inline: { titulo: 'Gestiona tus citas médicas fácilmente',                                                         boton: 'Empieza Ahora' },
@@ -56,6 +58,6 @@ window.ADS_SPONSORS = {
     nombre: 'MedicOs — Tu salud en orden',
     texto:  'Gestiona tu consulta médica digital',
     url:    'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',
-    img:    'ads/Logo-MedicOs.svg'
+    img:    'ads/medicos-doctor.png'
   },
 };
