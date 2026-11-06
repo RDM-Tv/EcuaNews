@@ -403,6 +403,38 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
 .adcard.adimg{padding:0;border:none;background:transparent;display:block}
 .adcard.adimg img{display:block;width:100%;height:auto;max-height:none;border-radius:10px}
 .rail .adcard.adimg{min-height:0}
+
+/* ── banners con plantilla (estilo MedicOs) ── */
+.bn{display:flex;position:relative;background:#fff;border:1px solid #dcdcdc;border-radius:8px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.06);text-decoration:none;color:#222;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;--bn:#0056b3}
+.bn-ad{position:absolute;top:5px;right:8px;font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;color:#9aa3b2;font-weight:600}
+.bn-logo{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bn-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.bn-ini{width:100%;height:100%;border-radius:50%;background:var(--bn);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:34px}
+.bn-t{color:var(--bn);font-weight:800;line-height:1.25}
+.bn-s{color:#666;line-height:1.4}
+.bn-cta{background:var(--bn);color:#fff;font-weight:700;border-radius:6px;text-align:center;display:inline-block;transition:filter .15s,transform .1s}
+.bn:hover .bn-cta{filter:brightness(.8);transform:translateY(-1px)}
+.bn.rail{flex-direction:column;justify-content:space-between;align-items:center;text-align:center;border-top:5px solid var(--bn);padding:26px 12px 20px;width:100%;height:600px}
+.bn.rail .bn-logo{width:95px;height:95px}
+.bn.rail .bn-c{display:flex;flex-direction:column;gap:12px;align-items:center}
+.bn.rail .bn-t{font-size:18px}.bn.rail .bn-s{font-size:12px}
+.bn.rail .bn-cta{width:100%;padding:12px 8px;font-size:13px}
+.bn.inline{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:8px 20px;border-left:6px solid var(--bn);min-height:90px;max-width:728px;margin:0 auto;width:100%}
+.bn.inline .bn-l{display:flex;align-items:center;gap:16px;min-width:0}
+.bn.inline .bn-logo{width:62px;height:62px}
+.bn.inline .bn-t{font-size:18px;font-weight:700}
+.bn.inline .bn-cta{padding:10px 20px;font-size:14px;white-space:nowrap;flex-shrink:0}
+.bn.box{flex-direction:column;justify-content:space-between;align-items:center;text-align:center;border-top:6px solid var(--bn);padding:26px 18px;width:100%;min-height:330px;gap:14px}
+.bn.box .bn-logo{width:100px;height:100px}
+.bn.box .bn-t{font-size:21px}.bn.box .bn-s{font-size:13px;margin-top:8px}
+.bn.box .bn-cta{width:80%;padding:13px 14px;font-size:14px}
+.adcard.adimg.box{margin:0}
+@media(max-width:560px){
+  .bn.inline{flex-wrap:wrap;justify-content:center;text-align:center;padding:14px}
+  .bn.inline .bn-l{flex-direction:row;text-align:left}
+  .bn.inline .bn-t{font-size:15px}
+  .bn.inline .bn-cta{width:100%}
+}
 </style>
 </head>
 <body>
@@ -648,7 +680,7 @@ function renderSponsor(){
   const el=document.getElementById('sponsorSlot');if(!el)return;
   const sp=SPONSORS[ciudad]||SPONSORS.todas;
   if(sp&&sp.nombre){
-    const ico=sp.img?`<img src="${esc(sp.img)}" alt="">`:`<div class="sp-ico">${I('mega')}</div>`;
+    const ico=sp.img?`<img src="${esc(sp.img)}" alt="" onerror="this.style.display='none'">`:`<div class="sp-ico">${I('mega')}</div>`;
     el.innerHTML=`<a class="sponsor" href="${esc(sp.url)}" target="_blank" rel="sponsored noopener">${ico}<div class="sp-body"><div class="sp-tag">Patrocinado</div><div class="sp-name">${esc(sp.nombre)}</div><div class="sp-txt">${esc(sp.texto)}</div></div><span class="sp-cta">Ver</span></a>`;
   }else{
     const nombre=CITY_NAMES[ciudad]||'tu ciudad';
@@ -885,7 +917,7 @@ function renderPortada(noticias){
     });
     html+=`</div>`;
   }
-  html+=`</div><aside class="trend" id="trendBox"><div data-wxbox></div><div data-trbody><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div></aside></div>`;
+  html+=`</div><aside class="trend" id="trendBox"><div data-wxbox></div><div data-trbody><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div>${adBox()}</aside></div>`;
   setContainer(html);
   loadTrends();loadWeather();
 }
@@ -1045,11 +1077,33 @@ function adCard(kind){
   if(list.length){
     const a=list[adN++%list.length];
     const full=kind==='rail'?a.railImg:a.inlineImg;     // creatividad completa (imagen que ya trae todo el diseño)
+    if(!full&&a[kind])return bnHtml(a,kind,a[kind]);   // banner con plantilla (logo + título + botón)
     if(full)return `<a class="adcard adimg ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener" title="${esc(a.nombre||'Publicidad')}"><img src="${esc(full)}" alt="${esc(a.nombre||'Publicidad')}"></a>`;
     const media=a.img?`<img src="${esc(a.img)}" alt="">`:`<div class="adico">${I('mega')}</div>`;
     return `<a class="adcard ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><div class="adtag">Publicidad</div>${media}<div><div class="adn">${esc(a.nombre)}</div><div class="adt">${esc(a.texto)}</div></div><span class="adcta">${esc(a.cta||'Ver más')}</span></a>`;
   }
   return `<a class="adcard free ${kind}" href="${adWaUrl()}" target="_blank" rel="noopener"><div class="adtag">Espacio publicitario</div><div class="adico">${I('mega')}</div><div><div class="adn">Tu marca aquí</div><div class="adt">Llega a miles de lectores en Ecuador cada día.</div></div><span class="adcta">Anunciar</span></a>`;
+}
+/* Banner con plantilla: logo + título + botón, en 3 formatos (rail = 160×600, inline = franja 728×90, box = cuadrado) */
+let adB=0;
+function bnHtml(a,kind,sp){
+  const c=/^#[0-9a-fA-F]{3,8}$/.test(a.color||'')?a.color:'#0056b3';
+  const ini=esc((a.nombre||'?').trim().charAt(0).toUpperCase());
+  const logo=a.logo?`<img src="${esc(a.logo)}" alt="${esc(a.nombre||'')}" onerror="this.parentNode.innerHTML='<span class=\\'bn-ini\\'>${ini}</span>'">`:`<span class="bn-ini">${ini}</span>`;
+  const t=esc(sp.titulo||a.nombre||'').replace(/\n/g,'<br>');
+  const sub=sp.subtitulo?`<div class="bn-s">${esc(sp.subtitulo)}</div>`:'';
+  const btn=`<span class="bn-cta">${esc(sp.boton||'Ver más')}</span>`;
+  const open=`<a class="bn ${kind}" style="--bn:${c}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener" title="${esc(a.nombre||'Publicidad')}"><span class="bn-ad">Publicidad</span>`;
+  if(kind==='inline')return `${open}<div class="bn-l"><div class="bn-logo">${logo}</div><div class="bn-t">${t}</div></div>${btn}</a>`;
+  if(kind==='box')return `${open}<div class="bn-logo">${logo}</div><div><div class="bn-t">${t}</div>${sub}</div>${btn}</a>`;
+  return `${open}<div class="bn-logo">${logo}</div><div class="bn-c"><div class="bn-t">${t}</div>${sub}</div>${btn}</a>`;
+}
+function adBox(){
+  const list=(ADS.casa||[]).filter(a=>a.box||a.boxImg);
+  if(!list.length)return '';
+  const a=list[adB++%list.length];
+  const inner=a.boxImg?`<a class="adcard adimg box" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><img src="${esc(a.boxImg)}" alt="${esc(a.nombre||'Publicidad')}"></a>`:bnHtml(a,'box',a.box);
+  return `<div class="adlbl" style="margin:16px 0 4px">Publicidad</div>${inner}`;
 }
 function adWaUrl(){return `https://wa.me/${CONTACT_WA}?text=`+encodeURIComponent('Hola, quiero anunciar mi negocio en EcuaNews. ¿Qué espacios y precios tienen?');}
 function adContact(){window.open(adWaUrl(),'_blank','noopener');}

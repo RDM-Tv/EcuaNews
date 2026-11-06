@@ -3,34 +3,46 @@
    para poner tus anuncios. No toques index.html.
 
    CÓMO USARLO (resumen):
-   1) Sube tus imágenes al repo, en una carpeta llamada  ads  (ej.  ads/goool-lateral.jpg)
-   2) Agrega un bloque {...} dentro de ADS_CASA, como los ejemplos de abajo.
+   1) Sube tus logos/imágenes al repo, en una carpeta llamada  ads
+      (OJO: GitHub distingue mayúsculas: "Logo-MedicOs.svg" ≠ "logo-medicos.svg")
+   2) Agrega un bloque {...} dentro de ADS_CASA, copiando el de MedicOs y cambiando los textos.
    3) Haz Commit. En 1–2 minutos ya se ve (si no, recarga dos veces).
 
-   TAMAÑOS DE IMAGEN RECOMENDADOS
-   • railImg   → barras laterales (solo pantallas grandes):  160 × 600 px  (se ve nítida hasta 300 × 600)
-   • inlineImg → franja entre noticias (celular y escritorio): 728 × 90 px  (o 970 × 90)
-   • img       → imagen cuadrada pequeña (400 × 400) si NO tienes diseño completo: se muestra con tu texto
-   Formatos: JPG, PNG o WEBP. Peso ideal: menos de 150 KB cada una.
+   DOS FORMAS DE HACER UN ANUNCIO
+   A) CON PLANTILLA (la que usa MedicOs): solo das logo, color y textos, y EcuaNews dibuja
+      los 3 formatos con ese diseño:
+        rail   → barras laterales (160 × 600, solo pantallas grandes de 1580 px o más)
+        inline → franja entre noticias (728 × 90; en celular se acomoda sola)
+        box    → cuadrado en el panel derecho, debajo de Tendencias (escritorio)
+      Si omites un formato (por ejemplo "box"), ese anuncio simplemente no sale en ese lugar.
+   B) CON IMAGEN LISTA (diseñada por ti en otra herramienta):
+        railImg: 'ads/x-lateral.jpg' (160×600) · inlineImg: 'ads/x-franja.jpg' (728×90) · boxImg: 'ads/x-cuadro.jpg' (400×400)
+
+   Con varios anuncios, se rotan solos.
    ═══════════════════════════════════════════════════════════════════════ */
 
 window.ADS_CASA = [
-  /* ── EJEMPLO 1: con diseño completo (lo más vistoso) ─────────────────────
-  {
-    nombre:    'Goool - Noticias deportivas',       // texto alternativo (accesibilidad)
-    url:       'https://TU-USUARIO.github.io/Goool/', // a dónde lleva el clic
-    railImg:   'ads/goool-lateral.jpg',              // 160×600
-    inlineImg: 'ads/goool-franja.jpg'                // 728×90
-  },
-  */
 
-  /* ── EJEMPLO 2: sin diseño, solo texto + imagen pequeña ──────────────────
+  /* ── MedicOs ─────────────────────────────────────────────────────────── */
   {
-    nombre: 'Canal de Telegram EcuaNews',
-    texto:  'Recibe las noticias de última hora en tu celular.',
-    url:    'https://t.me/TU_CANAL',
-    img:    'ads/telegram.png',                      // opcional
-    cta:    'Unirme'                                 // texto del botón
+    nombre: 'MedicOs',
+    url:    'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',
+    logo:   'ads/Logo-MedicOs.svg',     // ← sube este archivo a la carpeta ads
+    color:  '#0056b3',
+    rail:   { titulo: 'Tu salud\nen orden',                     subtitulo: 'Gestiona tu consulta médica digital', boton: 'Agendar Cita' },
+    inline: { titulo: 'Gestiona tus citas médicas fácilmente',                                                         boton: 'Empieza Ahora' },
+    box:    { titulo: 'Atención médica\nsin esperas',            subtitulo: 'Tu plataforma médica digital integral', boton: 'Accede Aquí' }
+  },
+
+  /* ── PLANTILLA para la siguiente plataforma (copia el bloque, quita las marcas de comentario y edita) ──
+  {
+    nombre: 'Goool',
+    url:    'https://TU-USUARIO.github.io/Goool/',
+    logo:   'ads/Logo-Goool.svg',
+    color:  '#0a8f3c',
+    rail:   { titulo: 'El Mundial\nal minuto', subtitulo: 'Resultados y tablas', boton: 'Ver ahora' },
+    inline: { titulo: 'Todo el Mundial 2026 en un solo lugar',               boton: 'Entrar' },
+    box:    { titulo: 'Resultados\nen vivo', subtitulo: 'Noticias y estadísticas', boton: 'Abrir Goool' }
   },
   */
 ];
@@ -40,10 +52,10 @@ window.ADS_CASA = [
    quito, guayaquil, manta, portoviejo, cuenca, ambato, loja, esmeraldas, machala, ibarra
    (el de una ciudad tiene prioridad sobre el de "todas").                    */
 window.ADS_SPONSORS = {
-  /* todas: {
-    nombre: 'Goool — Mundial 2026',
-    texto:  'Resultados, tablas y noticias deportivas en un solo lugar.',
-    url:    'https://TU-USUARIO.github.io/Goool/',
-    img:    'ads/goool-icono.png'     // opcional, cuadrada
-  }, */
+  todas: {
+    nombre: 'MedicOs — Tu salud en orden',
+    texto:  'Gestiona tu consulta médica digital',
+    url:    'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',
+    img:    'ads/Logo-MedicOs.svg'
+  },
 };
