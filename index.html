@@ -9,10 +9,12 @@
 <script>(function(){var t="light";try{t=localStorage.getItem("ecua_theme")||"light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="EcuaNews">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇪🇨</text></svg>">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="shortcut icon" href="favicon.ico"><text y=%22.9em%22 font-size=%2290%22>🇪🇨</text></svg>">
 
 <!-- ═══════════════════════════════════════════════════════
      GOOGLE ADSENSE — reemplaza ca-pub-XXXXXXXXXXXXXXXX
@@ -36,7 +38,7 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .logo-icon{font-size:28px}
 .logo-txt .name{font-weight:800;font-size:22px;letter-spacing:-0.5px;color:var(--fg)}
 .logo-txt .name span{color:var(--am)}
-.logo-txt .tag{font-size:9px;color:var(--mute);letter-spacing:1.5px;text-transform:uppercase}
+.logo-txt .tag{font-size:10px;color:#fff;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;opacity:1}
 .hright{display:flex;align-items:center;gap:10px}
 .ldot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
@@ -127,7 +129,7 @@ header{background:var(--bg);border-bottom:2px solid var(--am);padding:0 16px;pos
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 footer{border-top:1px solid var(--bd);padding:20px;text-align:center;color:var(--mute);font-size:12px;max-width:960px;margin:0 auto}
-@media(max-width:600px){.logo-txt .tag{display:none}.ftitle{font-size:17px}.nthumb{width:58px;height:58px}}
+@media(max-width:600px){.ftitle{font-size:17px}.nthumb{width:58px;height:58px}}
 
 /* ── PATROCINADOR ── */
 .sponsor{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(245,200,0,.10),rgba(30,58,110,.35));border:1px solid rgba(245,200,0,.35);border-radius:12px;padding:12px 14px;margin-bottom:14px;text-decoration:none;color:var(--fg)}
@@ -230,8 +232,6 @@ body{overflow-x:hidden}
 /* responsive cabecera */
 .hi{height:auto;min-height:58px;flex-wrap:wrap;gap:8px;padding:6px 0}
 .hright{flex-wrap:wrap;justify-content:flex-end;gap:8px}
-@media(max-width:700px){.btnico .lbl,.btnact .lbl{display:none}.btnico,.btnact{padding:7px 9px}.ldot{display:none}.hright{gap:6px}.logo-txt .name{font-size:19px}}
-@media(max-width:380px){.logo-txt{display:none}.hi{justify-content:center}}
 /* clima */
 .wx{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
 .wxr{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12.5px}
@@ -248,14 +248,6 @@ body{overflow-x:hidden}
 .dbt{font-weight:800;font-size:17px;color:#F5C800;font-variant-numeric:tabular-nums;letter-spacing:.5px}
 .dbm-s{display:none}
 @media(max-width:600px){.dbm-l{display:none}.dbm-s{display:inline}.dbd{font-size:12.5px}.dbt{font-size:15px}}
-/* ── cabecera móvil: nombre siempre visible, botones en 2ª fila ── */
-@media(max-width:600px){
-  .hi{flex-direction:column;align-items:stretch;gap:6px;padding:8px 0}
-  .logo{justify-content:flex-start}
-  .logo-txt{display:block!important}
-  .hright{width:100%;justify-content:space-between;flex-wrap:nowrap}
-  .hright .btnico,.hright .btnact{flex:1;justify-content:center;padding:8px 4px}
-}
 /* ── publicidad ── */
 .adcard{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(160deg,var(--deep),var(--mid));border:1px solid var(--bd2);border-radius:12px;text-decoration:none;color:var(--fg);padding:14px 10px;text-align:center}
 .adcard.free{border-style:dashed}
@@ -286,33 +278,154 @@ body{overflow-x:hidden}
 .amsg{font-size:12.5px;min-height:18px;margin:2px 0 10px;line-height:1.4}
 .amsg.err{color:var(--red)}.amsg.ok{color:var(--grn)}
 .acct-mail{font-weight:700;font-size:14px;word-break:break-all;margin:6px 0 12px}
+
+/* ═════════ REDISEÑO: jerarquía, cabecera compacta, subbar, hero ═════════ */
+.hi{flex-wrap:nowrap;min-height:56px;padding:0}
+.hright{flex-wrap:nowrap;gap:6px;justify-content:flex-end}
+.hright .lbl{display:none}.hright #acctLbl{display:inline}
+.hamb{display:none}
+.btnico,.btnact{border-radius:10px}
+.btnico.on{background:var(--am);color:var(--onam);border-color:var(--am)}
+header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.searchpop{display:none;position:absolute;right:16px;top:calc(100% + 8px);width:min(440px,calc(100vw - 32px));background:var(--mid);border:1px solid var(--bd2);border-radius:12px;padding:6px 8px 6px 12px;align-items:center;gap:8px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.searchpop.show{display:flex}
+.searchpop .srchinp{flex:1;background:transparent;border:none;padding:9px 4px;border-radius:0;font-size:14px;color:var(--fg);min-width:0}
+.searchpop .srchinp:focus{border:none;outline:none}
+.spx{background:transparent;border:none;color:var(--mute);cursor:pointer;padding:6px;border-radius:8px}
+.spx:hover{color:var(--fg)}
+.subbar{position:sticky;top:var(--hh,58px);z-index:90;background:var(--mid);border-bottom:1px solid var(--bd);box-shadow:var(--shadow)}
+.sbi{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:0 16px;min-height:46px}
+.sdate{display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex-shrink:0}
+.sd-d{font-weight:700;font-size:13px;color:var(--fg)}
+.sd-t{font-weight:800;font-size:16px;color:var(--am);font-variant-numeric:tabular-nums;letter-spacing:.4px}
+.snav{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.cityw{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bd2);border-radius:20px;padding:0 10px;flex-shrink:0;color:var(--mute)}
+.citysel{background:transparent;border:none;color:var(--fg);font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;padding:7px 2px;outline:none;cursor:pointer;max-width:170px}
+.citysel option{color:#0B1120;background:#fff}
+.catrow{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.catrow::-webkit-scrollbar{display:none}
+.catrow .catb{padding:13px 11px}
+.sstat{flex-shrink:0;margin-left:auto}
+.statusbar{background:none;padding:0;margin:0;border-radius:0}
+.stchip{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:10px;opacity:.85;white-space:nowrap}
+.stchip.ok{background:transparent;border:1px solid var(--bd2);color:var(--mute)}
+.main{padding-top:18px}
+/* hero + destacadas */
+.top{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;margin-bottom:6px}
+.hero{position:relative;display:flex;align-items:flex-end;min-height:400px;border-radius:18px;overflow:hidden;text-decoration:none;color:#fff;background:linear-gradient(135deg,#1E3A6E,#0B1120);box-shadow:0 8px 28px rgba(11,17,32,.25)}
+.hmedia{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px}
+.hmedia img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.hero:hover .hmedia img{transform:scale(1.03)}
+.hshade{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,10,22,.94) 0%,rgba(6,10,22,.62) 42%,rgba(6,10,22,0) 78%)}
+.hbody{position:relative;padding:24px 26px;width:100%}
+.hmeta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:11.5px;font-weight:600;margin-bottom:10px;color:#E6EBF5}
+.htitle{font-family:'Newsreader',serif;font-size:32px;line-height:1.16;font-weight:800;margin:0 0 10px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hsum{font-size:14.5px;line-height:1.55;color:#DDE4F2;margin:0 0 12px;max-width:760px}
+.hacts{display:flex;flex-wrap:wrap;gap:6px}
+.hacts .shbtn{color:#fff;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.28);border-radius:8px;padding:6px 11px}
+.hacts .shbtn.on{color:#F5C800;border-color:#F5C800}
+.side3{display:flex;flex-direction:column;gap:12px}
+.sc{display:flex;gap:12px;flex:1;background:var(--mid);border:1px solid var(--bd);border-radius:14px;padding:10px;text-decoration:none;color:var(--fg);box-shadow:var(--shadow);transition:transform .15s,border-color .15s;min-height:0}
+.sc:hover{transform:translateY(-2px);border-color:var(--am)}
+.scimg{width:118px;flex-shrink:0;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--deep),var(--mid));display:flex;align-items:center;justify-content:center;font-size:28px;min-height:84px}
+.scimg img{width:100%;height:100%;object-fit:cover}
+.scb{display:flex;flex-direction:column;min-width:0;flex:1;justify-content:space-between;gap:4px}
+.scm{display:flex;align-items:center;gap:8px;font-size:11px}
+.sct{font-family:'Newsreader',serif;font-size:15.5px;font-weight:700;line-height:1.28;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sc .lb{display:none}
+.sact{display:flex;gap:2px;flex-wrap:wrap}
+.sh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 12px}
+.sh h2{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2px;padding-left:10px;border-left:4px solid var(--am);margin:0}
+.brief{margin:18px 0 0}
+#sponsorSlot{margin-top:14px}
+.trend{top:calc(var(--hh,58px) + 58px)}
+.trend.dr-card{position:static}
+.ncard,.fcard{border-radius:14px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.btnact.spin .i,.btnact.spin .emo{display:inline-block;animation:rot .9s linear infinite}
+/* drawer móvil */
+#drawerOv{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:300}
+#drawerOv.show{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(88vw,380px);background:var(--bg);border-left:1px solid var(--bd2);transform:translateX(105%);transition:transform .25s;z-index:310;overflow-y:auto;padding:14px 16px 28px;-webkit-overflow-scrolling:touch}
+#drawer.open{transform:none;box-shadow:-10px 0 30px rgba(0,0,0,.35)}
+.dr-h{display:flex;align-items:center;justify-content:space-between}
+.dr-t{font-family:'Sora',sans-serif;font-weight:800;font-size:17px}
+.dr-s{margin-top:18px}
+.dr-l{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+#drawer .cityw{width:100%}#drawer .citysel{flex:1;max-width:none;padding:10px 2px;font-size:14px}
+#drawer .catrow{flex-wrap:wrap;overflow:visible;gap:6px}
+#drawer .catrow .catb{border:1px solid var(--bd2);border-radius:20px;padding:7px 12px}
+#drawer .catrow .catb.on{background:var(--am);color:var(--onam);border-color:var(--am)}
+.dr-brief{width:100%;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#1E3A6E,#152040);color:#F5C800;border:1px solid rgba(245,200,0,.4);border-radius:12px;padding:14px;font-family:'Sora',sans-serif;font-weight:800;font-size:14px;cursor:pointer;text-align:left}
+.dr-go{margin-left:auto}
+#drActions .btnico,#drActions .btnact{display:flex!important;align-items:center;gap:10px;width:100%;margin:0 0 8px;padding:11px 14px;font-size:13.5px;border-radius:10px}
+#drActions .btnico{background:var(--mid);color:var(--fg);border:1px solid var(--bd2)}
+#drActions .btnico.on{background:var(--am);color:var(--onam)}
+#drActions .lbl{display:inline!important}
+.dr-foot{margin-top:14px}
+/* móvil: ocultar cabecera pesada; foco en la noticia principal */
+@media(max-width:860px){
+  .trend:not(.dr-card){display:none}
+  .portada{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .hamb{display:inline-flex}
+  .hright{gap:8px}
+  .ldot{display:none}
+  .logo-txt .name{font-size:20px}
+  .sbi{gap:10px;min-height:38px}
+  .sd-d{font-size:12px}.sd-t{font-size:14px}
+  .sbi{justify-content:space-between}
+  .top{grid-template-columns:1fr;gap:12px}
+  .hero{min-height:290px;border-radius:14px}
+  .hbody{padding:16px}
+  .htitle{font-size:22px}
+  .hsum{display:none}
+  .hacts .lb{display:none}
+  .scimg{width:96px;min-height:74px}
+  .sct{font-size:14.5px}
+  .main{padding-top:12px}
+  .brief .bgo{display:none}
+}
+@media(max-width:380px){.logo-txt .name{font-size:18px}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol><symbol id="i-dollar" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol><symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol></svg>
 
-<div class="datebar"><div class="dbi"><div class="dbd" id="dbDate">&nbsp;</div><div class="dbt" id="dbTime">--:--:--</div></div></div>
 <header>
   <div class="hi">
-    <a class="logo" href="#">
+    <a class="logo" href="./">
       <span class="logo-icon"><span class="ic" data-i="logo"></span></span>
       <div class="logo-txt">
         <div class="name">Ecua<span>News</span></div>
-        <div class="tag">Noticias Ecuador</div>
+        <div class="tag">Noticias de Ecuador</div>
       </div>
     </a>
-    <div class="hright">
+    <div class="hright" id="hActs">
       <div class="ldot"></div>
+      <button class="btnico" id="btnSearch" onclick="toggleSearch()" title="Buscar" aria-label="Buscar"><span class="ic" data-i="search"></span></button>
       <button class="btnico" id="btnFav" onclick="toggleSaved()" title="Noticias guardadas"><span class="ic" data-i="bookmark"></span><span class="lbl"> Guardadas</span></button>
       <button class="btnico" id="btnBell" onclick="toggleAlertas()" title="Alertas de última hora"><span class="ic" data-i="bell"></span><span class="lbl"> Alertas</span></button>
       <button class="btnico" id="btnInstall" onclick="installApp()" style="display:none" title="Instalar app"><span class="ic" data-i="download"></span><span class="lbl"> Instalar</span></button>
-      <button class="btnico" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
+      <button class="btnico" id="btnShare" onclick="shareApp()" title="Compartir EcuaNews"><span class="ic" data-i="share"></span><span class="lbl"> Compartir</span></button>
       <button class="btnico" id="btnAcct" onclick="openAcct()" style="display:none" title="Mi cuenta"><span class="ic" data-i="user"></span><span class="lbl" id="acctLbl"> Ingresar</span></button>
       <button class="btnico" id="btnTheme" onclick="toggleTheme()" title="Cambiar entre tema claro y oscuro"><span class="ic" data-i="moon"></span><span class="lbl"> Tema</span></button>
-      <button class="btnact" id="btnRef" onclick="reload()"><span class="ic" data-i="refresh"></span><span class="lbl"> Actualizar</span></button>
+      <button class="btnact" id="btnRef" onclick="reload()" title="Actualizar noticias"><span class="ic" data-i="refresh"></span><span class="lbl"> Actualizar</span></button>
+      <button class="btnico hamb" id="btnMenu" onclick="openDrawer()" aria-label="Abrir menú"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>
   </div>
+  <div class="searchpop" id="searchPop">
+    <span class="ic" data-i="search"></span>
+    <input class="srchinp" id="q" type="search" placeholder="Buscar noticias, medios o temas…" oninput="debounceSearch()" onkeydown="if(event.key==='Escape')toggleSearch(false)" autocomplete="off">
+    <button class="spx" onclick="clearSearch()" aria-label="Limpiar búsqueda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
 </header>
+<div class="subbar" id="subbar"><div class="sbi">
+  <div class="sdate"><span class="sd-d" id="dbDate">&nbsp;</span><span class="sd-t" id="dbTime">--:--:--</span></div>
+  <div class="snav" id="snav"></div>
+  <div class="sstat" id="sbStatus"><div class="statusbar" id="statusbar"><span class="stchip load"><span class="sdot"></span>Conectando…</span></div></div>
+</div></div>
 
 <!-- BANNER AD — HORIZONTAL (728x90 leaderboard) -->
 <!-- Descomenta cuando Google apruebe tu cuenta AdSense
@@ -323,45 +436,7 @@ body{overflow-x:hidden}
 </div>
 -->
 
-<div class="citybar"><div class="cbi">
-  <button class="cb on" onclick="setCity('todas',this)"><span class="ic" data-e="🇪🇨"></span> Todo el país</button>
-  <button class="cb" onclick="setCity('quito',this)"><span class="ic" data-e="🏔️"></span> Quito</button>
-  <button class="cb" onclick="setCity('guayaquil',this)"><span class="ic" data-e="🌊"></span> Guayaquil</button>
-  <button class="cb" onclick="setCity('manta',this)"><span class="ic" data-e="⚓"></span> Manta</button>
-  <button class="cb" onclick="setCity('portoviejo',this)"><span class="ic" data-e="🏙️"></span> Portoviejo</button>
-  <button class="cb" onclick="setCity('cuenca',this)"><span class="ic" data-e="🏛️"></span> Cuenca</button>
-  <button class="cb" onclick="setCity('santo domingo',this)"><span class="ic" data-e="🌿"></span> Sto. Domingo</button>
-  <button class="cb" onclick="setCity('ambato',this)"><span class="ic" data-e="🌄"></span> Ambato</button>
-  <button class="cb" onclick="setCity('loja',this)"><span class="ic" data-e="🎵"></span> Loja</button>
-  <button class="cb" onclick="setCity('esmeraldas',this)"><span class="ic" data-e="🌴"></span> Esmeraldas</button>
-  <button class="cb" onclick="setCity('machala',this)"><span class="ic" data-e="🍌"></span> Machala</button>
-  <button class="cb" onclick="setCity('ibarra',this)"><span class="ic" data-e="🏘️"></span> Ibarra</button>
-</div></div>
-
-<div class="catbar"><div class="cati">
-  <button class="catb on" onclick="setCat('todas',this)">Todas</button>
-  <button class="catb" id="btnForYou" onclick="setForYou(this)"><span class="ic" data-i="star"></span> Para ti</button>
-  <button class="catb" onclick="setCat('seguridad',this)"><span class="ic" data-i="shield"></span> Seguridad</button>
-  <button class="catb" onclick="setCat('politica',this)"><span class="ic" data-i="landmark"></span> Política</button>
-  <button class="catb" onclick="setCat('economia',this)"><span class="ic" data-i="dollar"></span> Economía</button>
-  <button class="catb" onclick="setCat('transito',this)"><span class="ic" data-i="car"></span> Tránsito</button>
-  <button class="catb" onclick="setCat('salud',this)"><span class="ic" data-i="health"></span> Salud</button>
-  <button class="catb" onclick="setCat('deportes',this)"><span class="ic" data-i="ball"></span> Deportes</button>
-  <button class="catb" onclick="setCat('tecnologia',this)"><span class="ic" data-i="laptop"></span> Tecnología</button>
-  <button class="catb fan" onclick="setCat('farandula',this)"><span class="ic" data-i="star"></span> Farándula</button>
-</div></div>
-
 <div class="main">
-  <div id="sponsorSlot"></div>
-  <div class="srchwrap">
-    <span class="srchico"><span class="ic" data-i="search"></span></span>
-    <input class="srchinp" id="q" type="text"
-      placeholder="Buscar: Ecuavisa, Oromar, cortes de luz, tránsito…"
-      oninput="debounceSearch()">
-  </div>
-  <div class="statusbar" id="statusbar">
-    <span class="stchip load"><span class="sdot"></span>Conectando…</span>
-  </div>
   <div id="container">
     <div class="loadwrap"><div class="spinner"></div><div class="loadtxt">Cargando noticias de Ecuador…</div></div>
   </div>
@@ -373,6 +448,16 @@ body{overflow-x:hidden}
   <span style="color:var(--mute);opacity:.7;font-size:11px;">El contenido pertenece a sus respectivos medios. EcuaNews solo agrega y redirige.</span><br>
   <span class="foot-links"><a href="privacidad.html">Política de privacidad</a><a href="javascript:void(0)" onclick="adContact()">Anunciar en EcuaNews</a></span>
 </footer>
+<div id="drawerOv" onclick="closeDrawer()"></div>
+<aside id="drawer" aria-label="Menú">
+  <div class="dr-h"><div class="dr-t">Menú</div><button class="btnico" onclick="closeDrawer()" aria-label="Cerrar menú"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="dr-s"><div class="dr-l">Ciudad</div><div id="drCity"></div></div>
+  <div class="dr-s"><div class="dr-l">Categorías</div><div id="drCats"></div></div>
+  <div class="dr-s"><button class="dr-brief" onclick="closeDrawer();openBrief()"><span class="ic" data-i="mega"></span> Entérate en 60 segundos <span class="dr-go">→</span></button></div>
+  <div class="dr-s"><div class="trend dr-card"><div data-wxbox></div><div data-trbody><h4>Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div></div></div>
+  <div class="dr-s"><div class="dr-l">Opciones</div><div id="drActions"></div></div>
+  <div class="dr-foot" id="drStatus"></div>
+</aside>
 <div id="intModal" onclick="if(event.target===this)closeInterests()"><div class="intbox"><h3>Elige tus intereses</h3><p>"Para ti" mostrará primero estos temas. Se guardan solo en tu dispositivo y puedes cambiarlos o borrarlos cuando quieras.</p><div class="intgrid" id="intGrid"></div><div class="introw"><button onclick="clearInterests()">Borrar</button><button onclick="closeInterests()">Cancelar</button><button class="pri" onclick="saveInterests()">Guardar</button></div></div></div>
 <div id="acctModal" onclick="if(event.target===this)closeAcct()"><div class="intbox" id="acctBox"></div></div>
 <div id="briefModal" onclick="if(event.target===this)closeBrief()"><div class="briefbox" id="briefBox"></div></div>
@@ -520,10 +605,15 @@ function updateStatus(ok,count){
 }
 
 function goPage(p){pagina=p;window.scrollTo({top:0,behavior:'smooth'});fetchNews();}
-function setCity(c,btn){leaveSaved();ciudad=c;syncProfileSoon();pagina=0;renderSponsor();document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
-function setCat(c,btn){leaveSaved();cat=c;pagina=0;document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fetchNews();}
-function debounceSearch(){leaveSaved();clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
-function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.textContent='Actualizando…';fetchNews().then(()=>{b.disabled=false;b.innerHTML=I('refresh')+'<span class="lbl"> Actualizar</span>';showToast(E('✅ ')+'Actualizado');});}
+function syncNavUI(){
+  const sel=document.getElementById('citySel');if(sel)sel.value=ciudad;
+  document.querySelectorAll('.catb').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));
+}
+function setCity(c){leaveSaved();ciudad=c;syncProfileSoon();pagina=0;renderSponsor();syncNavUI();closeDrawer();fetchNews();loadWeather();}
+function setCat(c){leaveSaved();cat=c;pagina=0;syncNavUI();closeDrawer();fetchNews();}
+function pickCat(id){if(id==='parati')setForYou();else setCat(id);}
+function debounceSearch(){leaveSaved();markSearch();clearTimeout(searchTimer);searchTimer=setTimeout(()=>{pagina=0;fetchNews(false);},400);}
+function reload(){const b=document.getElementById('btnRef');b.disabled=true;b.classList.add('spin');fetchNews().then(()=>{b.disabled=false;b.classList.remove('spin');showToast(E('✅ ')+'Actualizado');});}
 function setContainer(h){document.getElementById('container').innerHTML=h;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
@@ -540,7 +630,7 @@ const SPONSORS={
 const CITY_NAMES={todas:'todo Ecuador',quito:'Quito',guayaquil:'Guayaquil',manta:'Manta',portoviejo:'Portoviejo','santo domingo':'Santo Domingo',cuenca:'Cuenca',ambato:'Ambato',loja:'Loja',esmeraldas:'Esmeraldas',machala:'Machala',ibarra:'Ibarra'};
 function esc(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function renderSponsor(){
-  const el=document.getElementById('sponsorSlot');
+  const el=document.getElementById('sponsorSlot');if(!el)return;
   const sp=SPONSORS[ciudad];
   if(sp&&sp.nombre){
     const ico=sp.img?`<img src="${esc(sp.img)}" alt="">`:`<div class="sp-ico">${I('mega')}</div>`;
@@ -694,7 +784,7 @@ function getInterests(){try{return JSON.parse(localStorage.getItem(INT_KEY)||'[]
 function setForYou(btn){
   if(!getInterests().length){openInterests(btn);return;}
   leaveSaved();cat='parati';pagina=0;
-  document.querySelectorAll('.catb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  syncNavUI();closeDrawer();
   fetchNews();
 }
 function openInterests(){
@@ -713,7 +803,7 @@ function saveInterests(){
 function clearInterests(){
   try{localStorage.removeItem(INT_KEY);}catch(e){}
   syncProfileSoon();closeInterests();showToast('Intereses borrados');
-  if(cat==='parati'){cat='todas';pagina=0;document.querySelectorAll('.catb').forEach((b,k)=>b.classList.toggle('on',k===0));fetchNews();}
+  if(cat==='parati'){cat='todas';pagina=0;syncNavUI();fetchNews();}
 }
 
 /* ═════════ PORTADA EDITORIAL · TENDENCIAS · ENTÉRATE EN 60 SEGUNDOS ═════════ */
@@ -744,37 +834,35 @@ function renderPortada(noticias){
   for(const n of pool)if(secs.length<3&&!secs.includes(n))secs.push(n);
   const rest=pool.filter(n=>!secs.includes(n));
   const ord=[hero,...secs,...rest];CUR=ord;
-  const img=(n,c)=>n.img_url?`<img src="${n.img_url}" alt="" loading="lazy" onerror="imgFail(this,'${n.categoria}')">`:catIco(n.categoria);
-  let html=`
-    <div class="statrow">
-      <span class="stattxt">Mostrando <strong>${noticias.length}</strong> de ${totalNews} noticias</span>${canTTS?`<button class="shbtn" id="btnHeads" onclick="speakHeadlines()">${I('headphones')} Escuchar titulares</button>`:''}
-      <span class="stattxt">${new Date().toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'})}</span>
-    </div>
-    <div class="brief" role="button" tabindex="0" onclick="openBrief()" onkeydown="if(event.key==='Enter')openBrief()">
-      <span class="bico">${I('mega')}</span>
-      <div><div class="bt">Entérate en 60 segundos</div><div class="bs">Las 5 noticias clave de hoy, con fuentes y audio</div></div>
-      <span class="bgo">Ver resumen →</span>
-    </div>
-    <div class="portada"><div class="pmain">
-    <div class="seclbl">${I('tack')} Noticia principal</div>
-    <a class="fcard hero${getFanClass(hero)}" href="${hero.url}" target="_blank" rel="noopener">
-      <div class="fthumb">${img(hero)}</div>
-      <div class="fbody">
-        <div class="fmeta"><span class="${getBadge(hero)}">${getPrefix(hero)}${hero.fuente_nombre||''}</span><span class="clbl">${I('pin')} ${hero.ciudad_label||'Nacional'}</span><span class="tago">${timeAgo(hero.publicado_en)}</span></div>
-        <div class="ftitle">${cl(hero.titulo)}</div>
-        ${hero.resumen?`<div class="fsum">${hero.resumen.slice(0,240)}…</div>`:''}
-        ${acts(0,hero)}
+  const img=n=>n.img_url?`<img src="${n.img_url}" alt="" loading="lazy" onerror="imgFail(this,'${n.categoria}')">`:catIco(n.categoria);
+  const heroImg=hero.img_url?`<img src="${hero.img_url}" alt="" onerror="imgFail(this,'${hero.categoria}')">`:catIco(hero.categoria);
+  let html=`<section class="top">
+    <a class="hero${getFanClass(hero)}" href="${hero.url}" target="_blank" rel="noopener">
+      <div class="hmedia">${heroImg}</div><div class="hshade"></div>
+      <div class="hbody">
+        <div class="hmeta"><span class="${getBadge(hero)}">${getPrefix(hero)}${esc(hero.fuente_nombre||'')}</span><span>${I('pin')} ${esc(hero.ciudad_label||'Nacional')}</span><span>${timeAgo(hero.publicado_en)}</span></div>
+        <h1 class="htitle">${cl(hero.titulo)}</h1>
+        ${hero.resumen?`<p class="hsum">${hero.resumen.slice(0,200)}…</p>`:''}
+        <div class="hacts">${acts(0,hero)}</div>
       </div>
     </a>
-    <div class="seclbl" style="margin-top:6px">${I('star')} Destacadas</div>
-    <div class="sec3">${secs.map((n,k)=>`<a class="scard" href="${n.url}" target="_blank" rel="noopener"><div class="sth">${img(n)}</div><div class="sb"><div class="fmeta" style="margin-bottom:0"><span class="${getBadge(n)}">${getPrefix(n)}${n.fuente_nombre||''}</span></div><div class="st">${cl(n.titulo)}</div><div class="sact"><span class="tago">${timeAgo(n.publicado_en)}</span> ${acts(k+1,n)}</div></div></a>`).join('')}</div>`;
+    <div class="side3">${secs.map((n,k)=>`<a class="sc${getFanClass(n)}" href="${n.url}" target="_blank" rel="noopener"><div class="scimg">${img(n)}</div><div class="scb"><div class="scm"><span class="${getBadge(n)}">${getPrefix(n)}${esc(n.fuente_nombre||'')}</span><span class="tago">${timeAgo(n.publicado_en)}</span></div><div class="sct">${cl(n.titulo)}</div><div class="sact">${acts(k+1,n)}</div></div></a>`).join('')}</div>
+  </section>
+  <div class="brief" role="button" tabindex="0" onclick="openBrief()" onkeydown="if(event.key==='Enter')openBrief()">
+    <span class="bico">${I('mega')}</span>
+    <div><div class="bt">Entérate en 60 segundos</div><div class="bs">Las 5 noticias clave de hoy, con fuentes y audio</div></div>
+    <span class="bgo">Ver resumen →</span>
+  </div>
+  <div id="sponsorSlot"></div>
+  <div class="portada"><div class="pmain">
+    <div class="sh"><h2>Últimas noticias</h2>${canTTS?`<button class="shbtn" id="btnHeads" onclick="speakHeadlines()">${I('headphones')} Escuchar titulares</button>`:''}</div>`;
   if(rest.length){
-    html+=`<div class="seclbl">${I('news')} Últimas noticias</div><div class="ngrid">`;
+    html+=`<div class="ngrid">`;
     rest.forEach((n,i)=>{
       html+=`<a class="ncard${getFanClass(n)}" href="${n.url}" target="_blank" rel="noopener">
         <div class="nthumb">${img(n)}</div>
         <div class="nbody">
-          <div class="nmeta"><span class="${getBadge(n)}">${getPrefix(n)}${n.fuente_nombre||''}</span><span class="clbl">${I('pin')} ${n.ciudad_label||'Nacional'}</span></div>
+          <div class="nmeta"><span class="${getBadge(n)}">${getPrefix(n)}${esc(n.fuente_nombre||'')}</span><span class="clbl">${I('pin')} ${esc(n.ciudad_label||'Nacional')}</span></div>
           <div class="ntitle">${cl(n.titulo)}</div>
           <div class="nsrc">${timeAgo(n.publicado_en)}${acts(i+4,n)}</div>
         </div></a>`;
@@ -782,12 +870,12 @@ function renderPortada(noticias){
     });
     html+=`</div>`;
   }
-  html+=`</div><aside class="trend" id="trendBox"><div id="wxBox"></div><div id="trBody"><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div></aside></div>`;
+  html+=`</div><aside class="trend" id="trendBox"><div data-wxbox></div><div data-trbody><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div></aside></div>`;
   setContainer(html);
   loadTrends();loadWeather();
 }
 async function loadTrends(){
-  const box=document.getElementById('trBody');if(!box)return;
+  const _t=[...document.querySelectorAll('[data-trbody]')];if(!_t.length)return;const box={set innerHTML(v){_t.forEach(x=>x.innerHTML=v);}};
   const H=`<h4>${I('star')} Tendencias en Ecuador</h4>`;
   try{
     const list=await getRecent();
@@ -818,7 +906,7 @@ function wxInfo(c){
 }
 const WXC={};
 async function loadWeather(){
-  const box=document.getElementById('wxBox');if(!box)return;
+  const _b=[...document.querySelectorAll('[data-wxbox]')];if(!_b.length)return;const box={set innerHTML(v){_b.forEach(x=>x.innerHTML=v);}};
   const keys=ciudad==='todas'?['quito','guayaquil','cuenca','manta']:[ciudad].filter(k=>WX_CITIES[k]);
   if(!keys.length){box.innerHTML='';return;}
   const ck=keys.join('|');
@@ -979,7 +1067,7 @@ function startAds(){
   if((ADS.casa||[]).length>1)setInterval(()=>{if(railOn){railOn=false;renderRails();}},45000);
 }
 const _setContainer=setContainer;
-setContainer=function(h){_setContainer(h);pushAds();};
+setContainer=function(h){_setContainer(h);renderSponsor();pushAds();};
 
 /* ═════════ CUENTAS DE USUARIO (Supabase Auth) ═════════ */
 let sb=null,USER=null,acctMode='in',syncT=null;
@@ -1056,8 +1144,7 @@ async function syncDown(){
     if(p&&p.intereses&&p.intereses.length){try{localStorage.setItem(INT_KEY,JSON.stringify(p.intereses));}catch(e){}}
     else if(localInt.length)await syncProfile();
     if(p&&p.ciudad&&p.ciudad!==ciudad&&ciudad==='todas'){
-      const btn=[...document.querySelectorAll('.cb')].find(b=>(b.getAttribute('onclick')||'').includes(`'${p.ciudad}'`));
-      if(btn)setCity(p.ciudad,btn);
+      if(CITIES.some(c=>c[0]===p.ciudad))setCity(p.ciudad);
     }
     // favoritos
     const {data:rows}=await sb.from('favoritos').select('news_id,data,creado_en').eq('user_id',USER.id).order('creado_en',{ascending:false}).limit(100);
@@ -1083,6 +1170,65 @@ async function syncFav(n,add){
   }catch(e){}
 }
 window.addEventListener('load',initAuth);
+
+
+/* ═════════ NAVEGACIÓN COMPACTA · MENÚ MÓVIL · BÚSQUEDA ═════════ */
+const CITIES=[['todas','🇪🇨','Todo el país'],['quito','🏔️','Quito'],['guayaquil','🌊','Guayaquil'],['manta','⚓','Manta'],['portoviejo','🏙️','Portoviejo'],['cuenca','🏛️','Cuenca'],['santo domingo','🌿','Sto. Domingo'],['ambato','🌄','Ambato'],['loja','🎵','Loja'],['esmeraldas','🌴','Esmeraldas'],['machala','🍌','Machala'],['ibarra','🏘️','Ibarra']];
+const CATS=[['todas',null,'Todas'],['parati','star','Para ti'],['seguridad','shield','Seguridad'],['politica','landmark','Política'],['economia','dollar','Economía'],['transito','car','Tránsito'],['salud','health','Salud'],['deportes','ball','Deportes'],['tecnologia','laptop','Tecnología'],['farandula','star','Farándula']];
+function buildNav(){
+  const sn=document.getElementById('snav');
+  sn.innerHTML=`<label class="cityw" id="cityWrap">${I('pin')}<select class="citysel" id="citySel" aria-label="Ciudad" onchange="setCity(this.value)">${CITIES.map(c=>`<option value="${c[0]}">${E(c[1]+' ')}${c[2]}</option>`).join('')}</select></label>
+  <div class="catrow" id="catRow">${CATS.map(c=>`<button class="catb${c[0]==='farandula'?' fan':''}" data-cat="${c[0]}" onclick="pickCat('${c[0]}')">${c[1]?I(c[1])+' ':''}${c[2]}</button>`).join('')}</div>`;
+  syncNavUI();
+}
+const MQ=window.matchMedia('(max-width:760px)');
+const ACT_IDS=['btnFav','btnBell','btnInstall','btnShare','btnAcct','btnTheme','btnRef'];
+function placeNav(){
+  const mob=MQ.matches;
+  const cityW=document.getElementById('cityWrap'),catRow=document.getElementById('catRow'),st=document.getElementById('statusbar');
+  if(!cityW||!catRow)return;
+  if(mob){
+    document.getElementById('drCity').appendChild(cityW);
+    document.getElementById('drCats').appendChild(catRow);
+    const dr=document.getElementById('drActions');ACT_IDS.forEach(id=>{const b=document.getElementById(id);if(b)dr.appendChild(b);});
+    document.getElementById('drStatus').appendChild(st);
+  }else{
+    const sn=document.getElementById('snav');sn.appendChild(cityW);sn.appendChild(catRow);
+    const h=document.getElementById('hActs'),menu=document.getElementById('btnMenu');
+    ACT_IDS.forEach(id=>{const b=document.getElementById(id);if(b)h.insertBefore(b,menu);});
+    document.getElementById('sbStatus').appendChild(st);
+    closeDrawer();
+  }
+  setHH();
+}
+function setHH(){const h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hh',h.offsetHeight+'px');}
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');document.getElementById('drawerOv').classList.add('show');
+  document.body.style.overflow='hidden';loadTrends();loadWeather();
+}
+function closeDrawer(){
+  const d=document.getElementById('drawer'),o=document.getElementById('drawerOv');if(!d)return;
+  d.classList.remove('open');o.classList.remove('show');document.body.style.overflow='';
+}
+function markSearch(){
+  const q=document.getElementById('q'),p=document.getElementById('searchPop');
+  document.getElementById('btnSearch').classList.toggle('on',!!q.value.trim()||p.classList.contains('show'));
+}
+function toggleSearch(force){
+  const p=document.getElementById('searchPop');
+  const open=force===undefined?!p.classList.contains('show'):force;
+  p.classList.toggle('show',open);markSearch();
+  if(open)setTimeout(()=>document.getElementById('q').focus(),30);
+}
+function clearSearch(){const q=document.getElementById('q');q.value='';debounceSearch();q.focus();}
+document.addEventListener('click',e=>{
+  const p=document.getElementById('searchPop');
+  if(p&&p.classList.contains('show')&&!e.target.closest('#searchPop,#btnSearch'))toggleSearch(false);
+});
+buildNav();placeNav();
+if(MQ.addEventListener)MQ.addEventListener('change',placeNav);
+if(window.ResizeObserver)new ResizeObserver(setHH).observe(document.querySelector('header'));
+window.addEventListener('resize',setHH);window.addEventListener('load',setHH);
 
 fillIcons();
 applyThemeUI();
