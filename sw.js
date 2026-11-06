@@ -1,8 +1,8 @@
-// EcuaNews service worker v3 — modo sin conexión
+// EcuaNews service worker v4 — modo sin conexión
 // • Cascarón de la app (index, manifest, iconos): carga instantánea, se actualiza en segundo plano.
 // • Noticias (API): siempre intenta la red primero; si no hay internet, muestra las últimas guardadas.
 // • Imágenes de noticias: se guardan (máx. 60) para verlas sin conexión.
-const VERSION = 'v3';
+const VERSION = 'v4';
 const SHELL = `ecuanews-shell-${VERSION}`;
 const DATA  = `ecuanews-data-${VERSION}`;
 const IMGS  = `ecuanews-img-${VERSION}`;
@@ -46,17 +46,20 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 2) Archivos propios de la app: caché primero y actualiza en segundo plano
+  // 2) Archivos propios: HTML/JS/config → red primero (siempre la versión nueva); imágenes → caché primero
   if (url.origin === self.location.origin) {
-    e.respondWith(
-      caches.match(req, { ignoreSearch: true }).then(cached => {
-        const red = fetch(req).then(res => {
-          if (res.ok) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); }
-          return res;
-        }).catch(() => cached);
-        return cached || red;
-      })
-    );
+    const esImg = /\.(png|jpe?g|webp|svg|ico|gif)$/i.test(url.pathname);
+    if (esImg) {
+      e.respondWith(caches.match(req, { ignoreSearch: true }).then(cached => cached || fetch(req).then(res => {
+        if (res.ok) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); }
+        return res;
+      })));
+    } else {
+      e.respondWith(fetch(req).then(res => {
+        if (res.ok) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); }
+        return res;
+      }).catch(() => caches.match(req, { ignoreSearch: true })));
+    }
     return;
   }
 

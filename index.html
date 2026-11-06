@@ -6,7 +6,7 @@
 <title>EcuaNews — Noticias Ecuador</title>
 <meta name="description" content="Todas las noticias de Ecuador en un solo lugar: Quito, Guayaquil, Manta, Portoviejo y más.">
 <meta name="theme-color" content="#0B1120">
-<script src="ads.js"></script>
+<script src="promos.js"></script>
 <script>(function(){var t="light";try{t=localStorage.getItem("ecua_theme")||"light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
@@ -675,7 +675,14 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
    Ciudad sin patrocinador muestra "Anuncia aquí" (invitación a anunciar). */
 const CONTACT_WA='593000000000'; // ← CAMBIAR por tu WhatsApp (593 + número sin 0)
 const APP_URL='https://rdm-tv.github.io/EcuaNews/';
-const SPONSORS=Object.assign({},window.ADS_SPONSORS||{},{
+/* Respaldo: si promos.js no carga (bloqueado por un bloqueador de anuncios, o no está subido), se usan estos. */
+const DEFAULT_CASA=[{nombre:'MedicOs',url:'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',imagen:'promos/medicos-doctor.png',color:'#0056b3',
+  rail:{titulo:'Tu salud\nen orden',subtitulo:'Gestiona tu consulta médica digital',boton:'Agendar Cita'},
+  inline:{titulo:'Gestiona tus citas médicas fácilmente',boton:'Empieza Ahora'},
+  box:{titulo:'Atención médica\nsin esperas',subtitulo:'Tu plataforma médica digital integral',boton:'Accede Aquí'}}];
+const DEFAULT_SPONSORS={todas:{nombre:'MedicOs — Tu salud en orden',texto:'Gestiona tu consulta médica digital',url:'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',img:'promos/medicos-doctor.png'}};
+if(window.ADS_CASA===undefined)console.warn('promos.js no cargó (¿bloqueador de anuncios o archivo sin subir?). Usando promociones de respaldo.');
+const SPONSORS=Object.assign({},window.ADS_SPONSORS!==undefined?window.ADS_SPONSORS:DEFAULT_SPONSORS,{
   // manta:{nombre:'Nombre del negocio',texto:'Promoción o eslogan corto',url:'https://wa.me/593999999999',img:''},
   // guayaquil:{nombre:'',texto:'',url:'',img:''},
 });
@@ -1074,7 +1081,7 @@ tickClock();setInterval(tickClock,1000);
    3) Mientras tanto se muestra "Tu marca aquí" con botón a tu WhatsApp (CONTACT_WA, arriba). */
 const ADS={
   adsense:{enabled:false,client:'ca-pub-XXXXXXXXXXXXXXXX',slots:{rail:'XXXXXXXXXX',inline:'XXXXXXXXXX'}},
-  casa:(window.ADS_CASA||[]),   // ← se edita en el archivo ads.js
+  casa:(window.ADS_CASA!==undefined?window.ADS_CASA:DEFAULT_CASA),   // ← se edita en el archivo promos.js (si no carga, se usan los de respaldo)
 };
 let adN=0;
 function adCard(kind){
