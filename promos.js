@@ -73,6 +73,21 @@ window.ADS_CASA = [
               boton: 'Empieza tu gestión', pie: 'Powered by RonnDu Corp.' }
   },
 
+
+  /* ── ClinicOs (ilustración + textos; la plantilla dibuja los 3 formatos) ── */
+  {
+    nombre:  'ClinicOs',
+    url:     'https://clinic-os-rdm.github.io/ClinicOs-Corporate-Web-Site/',
+    imagen:  'promos/clinicos-equipo.jpg',
+    color:   '#1b5aa6',     // azul
+    color2:  '#9a5f3c',     // marrón (degradado de la barra)
+    rail:   { titulo: 'Tu clínica,\nbien gestionada', subtitulo: 'Plataforma para clínicas y centros médicos',
+              puntos: ['Gestión de pacientes','Agenda de citas','Control de tu centro'], boton: 'Conocer ClinicOs' },
+    inline: { titulo: 'ClinicOs · Gestiona tu clínica o centro médico', subtitulo: 'Pacientes, citas y administración en un solo lugar', boton: 'Conocer más' },
+    box:    { titulo: 'Gestiona tu clínica\nsin complicaciones', subtitulo: 'La plataforma para clínicas y centros médicos',
+              puntos: ['Gestión de pacientes','Agenda de citas'], boton: 'Conocer ClinicOs' }
+  },
+
   /* ── PLANTILLA para la siguiente plataforma (copia el bloque, quita las marcas de comentario y edita) ──
   {
     nombre: 'Goool',
