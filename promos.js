@@ -55,6 +55,24 @@ window.ADS_CASA = [
     boxImg:    'promos/iwa-cuadro.png'     // 400 × 400
   },
 
+
+  /* ── SISSO (logo + textos; la plantilla dibuja los 3 formatos) ───────── */
+  {
+    nombre:     'SISSO',
+    url:        'https://sisso-rdc.github.io/SISSO-Corporate-Website/',
+    logo:       'promos/sisso-logo.jpg',
+    logoGrande: true,
+    color:      '#17608f',     // azul
+    color2:     '#3d9a44',     // verde (degradado de la barra)
+    rail:   { titulo: 'Salud y seguridad ocupacional', subtitulo: 'Asegura el bienestar de tu equipo',
+              puntos: ['Salud ocupacional','Ergonomía','Prevención de accidentes','Matrices de riesgos'],
+              boton: 'Solicitar información', pie: 'Powered by RonnDu Corp.' },
+    inline: { titulo: 'SISSO · Salud y seguridad ocupacional', subtitulo: 'Prevención de riesgos · Ergonomía · Cumplimiento legal', boton: 'Regístrate ahora' },
+    box:    { titulo: 'Salud & seguridad total',
+              puntos: ['Salud ocupacional','Ergonomía inteligente','Prevención de accidentes','Matrices de riesgos'],
+              boton: 'Empieza tu gestión', pie: 'Powered by RonnDu Corp.' }
+  },
+
   /* ── PLANTILLA para la siguiente plataforma (copia el bloque, quita las marcas de comentario y edita) ──
   {
     nombre: 'Goool',
