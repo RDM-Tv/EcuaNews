@@ -401,7 +401,7 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
 @media(max-width:760px){.sbcats{display:none}}
 
 .adcard.adimg{padding:0;border:none;background:transparent;display:block}
-.adcard.adimg img{display:block;width:100%;height:auto;max-height:none;border-radius:10px}
+.adcard.adimg img{display:block;width:auto;max-width:100%;height:auto;max-height:none;border-radius:10px;margin:0 auto}
 .rail .adcard.adimg{min-height:0}
 
 /* ── banners con plantilla (estilo MedicOs) ── */
@@ -440,6 +440,13 @@ header{box-shadow:0 2px 14px rgba(0,0,0,.18)}
 .bn.box .bn-logo.pic{width:150px;height:150px}
 .bn.inline .bn-logo.pic{width:74px;height:74px}
 .bn-logo.pic img{border-radius:50%}
+
+.adbx{margin-top:16px}
+.adbox-m{display:none}
+.adbox-m .bn.box,.adbox-m .adcard{max-width:420px;margin:0 auto}
+@media(max-width:860px){.adbox-m{display:block}}
+.adslot>*{animation:adfade .6s ease}
+@keyframes adfade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -676,7 +683,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 const CONTACT_WA='593000000000'; // ← CAMBIAR por tu WhatsApp (593 + número sin 0)
 const APP_URL='https://rdm-tv.github.io/EcuaNews/';
 /* Respaldo: si promos.js no carga (bloqueado por un bloqueador de anuncios, o no está subido), se usan estos. */
-const DEFAULT_CASA=[{nombre:'MedicOs',url:'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',imagen:'promos/medicos-doctor.png',color:'#0056b3',
+const DEFAULT_CASA=[{nombre:'MedicOs',peso:3,url:'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',imagen:'promos/medicos-doctor.png',color:'#0056b3',
   rail:{titulo:'Tu salud\nen orden',subtitulo:'Gestiona tu consulta médica digital',boton:'Agendar Cita'},
   inline:{titulo:'Gestiona tus citas médicas fácilmente',boton:'Empieza Ahora'},
   box:{titulo:'Atención médica\nsin esperas',subtitulo:'Tu plataforma médica digital integral',boton:'Accede Aquí'}}];
@@ -893,6 +900,7 @@ function renderPortada(noticias){
   for(const n of pool)if(secs.length<3&&!secs.includes(n))secs.push(n);
   const rest=pool.filter(n=>!secs.includes(n));
   const ord=[hero,...secs,...rest];CUR=ord;
+  const boxH=adBox();   // el mismo anuncio cuadrado para escritorio (panel) y móvil (lista)
   const img=n=>n.img_url?`<img src="${n.img_url}" alt="" loading="lazy" onerror="imgFail(this,'${n.categoria}')">`:catIco(n.categoria);
   const heroImg=hero.img_url?`<img src="${hero.img_url}" alt="" onerror="imgFail(this,'${hero.categoria}')">`:catIco(hero.categoria);
   let html=`<section class="top">
@@ -925,11 +933,12 @@ function renderPortada(noticias){
           <div class="ntitle">${cl(n.titulo)}</div>
           <div class="nsrc">${timeAgo(n.publicado_en)}${acts(i+4,n)}</div>
         </div></a>`;
+      if(i===5)html+=adBoxMobile(boxH);                  // cuadro grande: en móvil va dentro de la lista
       if((i+1)%8===0)html+=adInline();
     });
     html+=`</div>`;
   }
-  html+=`</div><aside class="trend" id="trendBox"><div data-wxbox></div><div data-trbody><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div>${adBox()}</aside></div>`;
+  html+=`</div><aside class="trend" id="trendBox"><div data-wxbox></div><div data-trbody><h4>${I('star')} Tendencias en Ecuador</h4><div class="sub">Cargando…</div></div>${boxH}</aside></div>`;
   setContainer(html);
   loadTrends();loadWeather();
 }
@@ -1083,21 +1092,43 @@ const ADS={
   adsense:{enabled:false,client:'ca-pub-XXXXXXXXXXXXXXXX',slots:{rail:'XXXXXXXXXX',inline:'XXXXXXXXXX'}},
   casa:(window.ADS_CASA!==undefined?window.ADS_CASA:DEFAULT_CASA),   // ← se edita en el archivo promos.js (si no carga, se usan los de respaldo)
 };
-let adN=0;
-function adCard(kind){
-  const list=ADS.casa||[];
-  if(list.length){
-    const a=list[adN++%list.length];
-    const full=kind==='rail'?a.railImg:a.inlineImg;     // creatividad completa (imagen que ya trae todo el diseño)
-    if(!full&&a[kind])return bnHtml(a,kind,a[kind]);   // banner con plantilla (logo + título + botón)
-    if(full)return `<a class="adcard adimg ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener" title="${esc(a.nombre||'Publicidad')}"><img src="${esc(full)}" alt="${esc(a.nombre||'Publicidad')}"></a>`;
-    const media=a.img?`<img src="${esc(a.img)}" alt="">`:`<div class="adico">${I('mega')}</div>`;
-    return `<a class="adcard ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><div class="adtag">Publicidad</div>${media}<div><div class="adn">${esc(a.nombre)}</div><div class="adt">${esc(a.texto)}</div></div><span class="adcta">${esc(a.cta||'Ver más')}</span></a>`;
+const ADS_ROTAR=((window.ADS_ROTAR_SEG)||30)*1000;     // cada cuántos segundos cambian los anuncios
+const adPos={rail:0,inline:0,box:0},adLast={};
+function adSupports(a,kind){return !!(a[kind+'Img']||a[kind]);}
+function adPool(kind){
+  // anuncios que pueden salir en este formato (con plantilla, imagen lista o, en rail/inline, solo texto)
+  return (ADS.casa||[]).filter(a=>adSupports(a,kind)||(kind!=='box'&&a.texto&&!a.rail&&!a.inline&&!a.box&&!a.railImg&&!a.inlineImg&&!a.boxImg));
+}
+// Orden de rotación: cada anuncio aparece tantas veces como su "peso" (MedicOs = 3 → prioridad)
+function adOrder(pool){
+  const maxW=Math.max(...pool.map(a=>Math.max(1,a.peso||1)));
+  const out=[];
+  for(let p=1;p<=maxW;p++)pool.forEach(a=>{if(Math.max(1,a.peso||1)>=p)out.push(a);});
+  return out;
+}
+function pickAd(kind,avoid){
+  const pool=adPool(kind);if(!pool.length)return null;
+  const seq=adOrder(pool);let a=null;
+  for(let t=0;t<seq.length;t++){
+    a=seq[adPos[kind]++%seq.length];
+    if(!avoid||a!==avoid||pool.length===1)break;
   }
+  return a;
+}
+function adFree(kind){
   return `<a class="adcard free ${kind}" href="${adWaUrl()}" target="_blank" rel="noopener"><div class="adtag">Espacio publicitario</div><div class="adico">${I('mega')}</div><div><div class="adn">Tu marca aquí</div><div class="adt">Llega a miles de lectores en Ecuador cada día.</div></div><span class="adcta">Anunciar</span></a>`;
 }
+function adCard(kind,avoid){
+  const a=pickAd(kind,avoid);
+  if(!a)return kind==='box'?'':adFree(kind);
+  adLast[kind]=a;
+  const full=a[kind+'Img'];                                   // creatividad completa (imagen que ya trae todo el diseño)
+  if(full)return `<a class="adcard adimg ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener" title="${esc(a.nombre||'Publicidad')}"><img src="${esc(full)}" alt="${esc(a.nombre||'Publicidad')}"></a>`;
+  if(a[kind])return bnHtml(a,kind,a[kind]);                    // banner con plantilla (imagen/logo + título + botón)
+  const media=a.img?`<img src="${esc(a.img)}" alt="">`:`<div class="adico">${I('mega')}</div>`;
+  return `<a class="adcard ${kind}" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><div class="adtag">Publicidad</div>${media}<div><div class="adn">${esc(a.nombre)}</div><div class="adt">${esc(a.texto)}</div></div><span class="adcta">${esc(a.cta||'Ver más')}</span></a>`;
+}
 /* Banner con plantilla: logo + título + botón, en 3 formatos (rail = 160×600, inline = franja 728×90, box = cuadrado) */
-let adB=0;
 function bnHtml(a,kind,sp){
   const c=/^#[0-9a-fA-F]{3,8}$/.test(a.color||'')?a.color:'#0056b3';
   const ini=esc((a.nombre||'?').trim().charAt(0).toUpperCase());
@@ -1112,41 +1143,64 @@ function bnHtml(a,kind,sp){
   return `${open}<div class="bn-logo${pic}">${logo}</div><div class="bn-c"><div class="bn-t">${t}</div>${sub}</div>${btn}</a>`;
 }
 function adBox(){
-  const list=(ADS.casa||[]).filter(a=>a.box||a.boxImg);
-  if(!list.length)return '';
-  const a=list[adB++%list.length];
-  const inner=a.boxImg?`<a class="adcard adimg box" href="${esc(a.url)}" target="_blank" rel="sponsored noopener"><img src="${esc(a.boxImg)}" alt="${esc(a.nombre||'Publicidad')}"></a>`:bnHtml(a,'box',a.box);
-  return `<div class="adlbl" style="margin:16px 0 4px">Publicidad</div>${inner}`;
+  const A=ADS.adsense;
+  const inner=(A.enabled&&A.slots.box)?adSlot('box'):adCard('box');
+  if(!inner)return '';
+  return `<div class="adbx" data-ad="box"><div class="adlbl">Publicidad</div><div class="adslot">${inner}</div></div>`;
 }
+function adBoxMobile(b){return b?`<div class="adwrap adbox-m">${b}</div>`:'';}
 function adWaUrl(){return `https://wa.me/${CONTACT_WA}?text=`+encodeURIComponent('Hola, quiero anunciar mi negocio en EcuaNews. ¿Qué espacios y precios tienen?');}
 function adContact(){window.open(adWaUrl(),'_blank','noopener');}
-function adSlot(kind){
+function adSlot(kind,avoid){
   const A=ADS.adsense;
   if(A.enabled&&A.slots[kind]){
     if(kind==='rail'){const w=innerWidth>=1900?300:160;return `<ins class="adsbygoogle" style="display:inline-block;width:${w}px;height:600px" data-ad-client="${A.client}" data-ad-slot="${A.slots.rail}"></ins>`;}
     return `<ins class="adsbygoogle" style="display:block" data-ad-client="${A.client}" data-ad-slot="${A.slots[kind]}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
   }
-  return adCard(kind);
+  return adCard(kind,avoid);
 }
-function adInline(){return `<div class="adwrap"><div class="adlbl">Publicidad</div>${adSlot('inline')}</div>`;}
+function adInline(){return `<div class="adwrap" data-ad="inline"><div class="adlbl">Publicidad</div><div class="adslot">${adSlot('inline')}</div></div>`;}
 function pushAds(){
   if(!ADS.adsense.enabled)return;
   document.querySelectorAll('ins.adsbygoogle:not([data-done])').forEach(el=>{el.setAttribute('data-done','1');try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});
 }
 let railOn=false;
+function fillRails(){
+  const l=document.getElementById('railL'),r=document.getElementById('railR');
+  if(l)l.innerHTML=adSlot('rail');
+  if(r)r.innerHTML=adSlot('rail',adLast.rail);      // la barra derecha evita repetir el anuncio de la izquierda
+  pushAds();
+}
 function renderRails(){
   const want=innerWidth>=1580&&innerHeight>=720;
   if(want===railOn)return;
   railOn=want;
-  ['railL','railR'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=want?adSlot('rail'):'';});
-  pushAds();
+  if(want)fillRails();else ['railL','railR'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+}
+function hov(el){try{return el.matches(':hover');}catch(e){return false;}}
+function rotateAds(){
+  if(ADS.adsense.enabled||document.hidden)return;
+  const vis=el=>el.getClientRects().length>0;
+  let boxHtml=null;
+  document.querySelectorAll('[data-ad]').forEach(el=>{
+    const k=el.dataset.ad,slot=el.querySelector('.adslot');
+    if(!slot||adPool(k).length<2)return;
+    if(k==='box'){                                   // escritorio y móvil muestran el mismo cuadro
+      if(boxHtml===null)boxHtml=adCard('box');
+      if(boxHtml&&!hov(el))slot.innerHTML=boxHtml;
+      return;
+    }
+    if(!vis(el)||hov(el))return;
+    slot.innerHTML=adCard(k);
+  });
+  if(railOn&&adPool('rail').length>=2&&!hov(document.getElementById('railL'))&&!hov(document.getElementById('railR')))fillRails();
 }
 function startAds(){
   if(ADS.adsense.enabled){const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS.adsense.client;document.head.appendChild(sc);}
   renderRails();
   window.addEventListener('load',()=>{railOn=false;renderRails();});
   let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderRails,250);});
-  if((ADS.casa||[]).length>1)setInterval(()=>{if(railOn){railOn=false;renderRails();}},45000);
+  setInterval(rotateAds,ADS_ROTAR);
 }
 const _setContainer=setContainer;
 setContainer=function(h){_setContainer(h);renderSponsor();pushAds();};

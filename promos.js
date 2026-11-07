@@ -22,14 +22,20 @@
    B) CON IMAGEN LISTA (diseñada por ti en otra herramienta):
         railImg: 'promos/x-lateral.jpg' (160×600) · inlineImg: 'promos/x-franja.jpg' (728×90) · boxImg: 'promos/x-cuadro.jpg' (400×400)
 
-   Con varios anuncios, se rotan solos.
+   ROTACIÓN: con 2 o más anuncios, cambian solos cada cierto tiempo (barras laterales, franjas y cuadro).
+   • peso (opcional, por defecto 1): cuántas veces aparece en la rotación. MedicOs tiene peso 3 = prioridad.
+   • Las dos barras laterales nunca muestran el mismo anuncio a la vez si hay otro disponible.
+   • Cada cuántos segundos cambian: ADS_ROTAR_SEG (abajo).
    ═══════════════════════════════════════════════════════════════════════ */
+
+window.ADS_ROTAR_SEG = 30;   // segundos entre cambios de anuncio
 
 window.ADS_CASA = [
 
   /* ── MedicOs ─────────────────────────────────────────────────────────── */
   {
     nombre: 'MedicOs',
+    peso:   3,        // prioridad: aparece 3 veces más que un anuncio normal (peso 1)
     url:    'https://medicos-rdm.github.io/MedicOs-Corporate-Web-Site/inicio.html',
     imagen: 'promos/medicos-doctor.png',   // ← ilustración del doctor (sube este archivo a la carpeta promos)
     // logo: 'promos/Logo-MedicOs.svg',    // (opcional) si no usas "imagen", se muestra este logo
@@ -37,6 +43,16 @@ window.ADS_CASA = [
     rail:   { titulo: 'Tu salud\nen orden',                     subtitulo: 'Gestiona tu consulta médica digital', boton: 'Agendar Cita' },
     inline: { titulo: 'Gestiona tus citas médicas fácilmente',                                                         boton: 'Empieza Ahora' },
     box:    { titulo: 'Atención médica\nsin esperas',            subtitulo: 'Tu plataforma médica digital integral', boton: 'Accede Aquí' }
+  },
+
+
+  /* ── Infinite Web Architecture (diseños listos: imágenes) ───────────── */
+  {
+    nombre:    'Infinite Web Architecture',
+    url:       'https://infinitewebarchitecture.github.io/InfiniteWebArchitecture.wp/',
+    railImg:   'promos/iwa-lateral.png',   // 160 × 600
+    inlineImg: 'promos/iwa-franja.png',    // 728 × 90
+    boxImg:    'promos/iwa-cuadro.png'     // 400 × 400
   },
 
   /* ── PLANTILLA para la siguiente plataforma (copia el bloque, quita las marcas de comentario y edita) ──
