@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel · EcuaNews</title>
+<link rel="icon" type="image/png" href="favicon-32.png">
+<style>
+*{box-sizing:border-box;margin:0}
+:root{--bg:#0B1120;--mid:#152040;--deep:#1E3A6E;--fg:#F7F8FA;--mute:#8A97AE;--am:#F5C800;--grn:#00C48C;--red:#E8253A;--org:#FF9F1C;--bd:rgba(255,255,255,.1)}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--fg);line-height:1.45;min-height:100vh}
+header{background:#070B16;border-bottom:3px solid var(--am);position:sticky;top:0;z-index:20}
+.hi{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:20px}.logo b{color:var(--am)}.logo small{font-size:11px;color:var(--mute);font-weight:600;margin-left:8px;letter-spacing:1px;text-transform:uppercase}
+.sp{flex:1}
+select,button,input{font:inherit}
+select,.btn{background:var(--mid);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer}
+.btn.pri{background:var(--am);color:#0B1120;border-color:var(--am);font-weight:700}
+.btn:hover{border-color:var(--am)}
+nav{max-width:1200px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:none;color:var(--mute);padding:11px 14px;font-weight:700;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button.on{color:var(--am);border-bottom-color:var(--am)}
+main{max-width:1200px;margin:0 auto;padding:18px 16px 60px}
+.login{max-width:380px;margin:12vh auto;background:var(--mid);border:1px solid var(--bd);border-radius:16px;padding:26px}
+.login h1{font-size:20px;margin-bottom:6px}.login p{color:var(--mute);font-size:13px;margin-bottom:16px}
+.login input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--fg);padding:12px;border-radius:10px;margin-bottom:12px}
+.err{color:#ff7b8a;font-size:13px;min-height:18px;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--mid);border:1px solid var(--bd);border-radius:14px;padding:14px 16px}
+.kpi .n{font-size:28px;font-weight:800;color:var(--am);font-variant-numeric:tabular-nums}.kpi .l{font-size:12px;color:var(--mute);margin-top:2px}.kpi .s{font-size:11px;color:var(--mute);margin-top:4px}
+.card{background:var(--mid);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px}
+.card h2{font-size:14px;margin-bottom:12px;letter-spacing:.3px}.card h2 small{color:var(--mute);font-weight:500;margin-left:6px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mute);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;padding:6px 8px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--bd);vertical-align:middle}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto}
+.hb{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px}.hb .k{width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .b{flex:1;background:rgba(255,255,255,.06);border-radius:6px;height:14px;overflow:hidden}.hb .b i{display:block;height:100%;background:linear-gradient(90deg,var(--deep),var(--am));border-radius:6px}
+.hb .v{width:52px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mute)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.ok{background:var(--grn)}.warn{background:var(--org)}.bad{background:var(--red)}.na{background:#667}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.08);color:var(--mute)}
+.errtxt{color:#ff9aa5;font-size:11.5px;max-width:420px;word-break:break-word}
+.note{background:rgba(245,200,0,.08);border:1px solid rgba(245,200,0,.35);border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:16px;color:#f0e2a0}
+.note code{background:rgba(0,0,0,.35);padding:1px 6px;border-radius:5px;color:#fff}
+svg text{fill:#8A97AE;font-size:10px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:6px}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.hide{display:none}
+</style></head><body>
+<div id="loginView" class="login">
+  <h1>Panel de EcuaNews</h1><p>Escribe la clave de administración (la que pusiste como <b>ADMIN_TOKEN</b> en Render).</p>
+  <input id="tok" type="password" placeholder="Clave" autocomplete="current-password" onkeydown="if(event.key==='Enter')entrar()">
+  <div class="err" id="loginErr"></div>
+  <button class="btn pri" style="width:100%;padding:11px" onclick="entrar()">Entrar</button>
+</div>
+
+<div id="appView" class="hide">
+<header><div class="hi">
+  <div class="logo">Ecua<b>News</b><small>Panel</small></div><div class="sp"></div>
+  <select id="dias" onchange="cargar()"><option value="7">Últimos 7 días</option><option value="14">Últimos 14 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select>
+  <button class="btn" onclick="cargar()">Actualizar</button>
+  <button class="btn" onclick="exportar()">Exportar CSV</button>
+  <button class="btn" onclick="salir()">Salir</button>
+</div>
+<nav id="tabs"></nav></header>
+<main id="main"></main>
+</div>
+
+<script>
+const API=(function(){try{const p=new URLSearchParams(location.search).get('api');if(p&&/^https:\/\//.test(p))return p.replace(/\/$/,'');}catch(e){}return 'https://ecual-backend.onrender.com/api';})();
+const $=id=>document.getElementById(id);
+const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N=v=>Number(v||0).toLocaleString('es-EC');
+let TOKEN=sessionStorage.getItem('ecua_admin')||'',TAB='resumen',RES=null,FUE=null;
+
+async function api(path){
+  const r=await fetch(API+path,{headers:{'x-admin-token':TOKEN}});
+  if(r.status===401||r.status===429){const j=await r.json().catch(()=>({}));throw Object.assign(new Error(j.error||'Acceso denegado'),{auth:true});}
+  if(r.status===503){const j=await r.json().catch(()=>({}));throw Object.assign(new Error(j.error||'Servicio no disponible'),{auth:true});}
+  return r.json();
+}
+async function entrar(){
+  TOKEN=$('tok').value.trim();$('loginErr').textContent='';
+  if(!TOKEN){$('loginErr').textContent='Escribe la clave.';return;}
+  try{await api('/admin/ping');sessionStorage.setItem('ecua_admin',TOKEN);$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}
+  catch(e){$('loginErr').textContent=e.auth?e.message:'No se pudo conectar con el servidor (si estaba dormido, espera 1 minuto y reintenta).';}
+}
+function salir(){sessionStorage.removeItem('ecua_admin');TOKEN='';location.reload();}
+const TABS=[['resumen','Resumen'],['fuentes','Fuentes de noticias'],['audiencia','Audiencia'],['contenido','Contenido y compartidos'],['publicidad','Publicidad']];
+function armarTabs(){$('tabs').innerHTML=TABS.map(t=>`<button class="${t[0]===TAB?'on':''}" onclick="TAB='${t[0]}';armarTabs();pintar()">${t[1]}</button>`).join('');}
+
+async function cargar(){
+  $('main').innerHTML='<div class="card">Cargando…</div>';
+  const d=$('dias').value;
+  try{
+    const [r,f]=await Promise.all([api('/admin/resumen?dias='+d),api('/admin/fuentes?dias='+Math.min(d,30))]);
+    RES=r;FUE=f;pintar();
+  }catch(e){if(e.auth){salir();return;}$('main').innerHTML='<div class="note">Error: '+esc(e.message)+'</div>';}
+}
+function pintar(){
+  if(!RES)return;
+  const v={resumen:vResumen,fuentes:vFuentes,audiencia:vAudiencia,contenido:vContenido,publicidad:vPublicidad}[TAB];
+  $('main').innerHTML=v();
+  if(TAB==='resumen')dibujarResumen();
+}
+function sinDatos(){
+  if(RES&&RES.error==='sin-service-key')return `<div class="note"><b>Las estadísticas de visitas aún no están activas.</b> En Render → Environment agrega <code>SUPABASE_SERVICE_KEY</code> (Supabase → Project Settings → API → clave <i>service_role</i>) y ejecuta <code>estadisticas.sql</code> en Supabase. Mientras tanto, la pestaña <b>Fuentes</b> sí funciona con el estado actual.</div>`;
+  if(RES&&RES.ok===false)return `<div class="note"><b>No se pudieron leer las estadísticas:</b> ${esc(RES.error)}. Revisa que ejecutaste <code>estadisticas.sql</code> en Supabase.</div>`;
+  return '';
+}
+const sum=(a,k)=>(a||[]).reduce((s,x)=>s+Number(x[k]||0),0);
+function hbars(list,fmt){
+  list=list||[];const m=Math.max(1,...list.map(x=>Number(x.v)));
+  if(!list.length)return '<div style="color:var(--mute);font-size:13px">Sin datos todavía.</div>';
+  return list.map(x=>`<div class="hb"><div class="k" title="${esc(x.k)}">${esc(fmt?fmt(x.k):x.k)}</div><div class="b"><i style="width:${Math.round(Number(x.v)/m*100)}%"></i></div><div class="v">${N(x.v)}</div></div>`).join('');
+}
+function chart(labels,series,h){
+  h=h||200;const W=900,P={l:34,r:8,t:10,b:22},w=W-P.l-P.r,ih=h-P.t-P.b;
+  const max=Math.max(1,...series.flatMap(s=>s.v.map(Number)));const n=labels.length||1,g=w/n,bw=Math.max(2,Math.min(26,g/(series.length+1)));
+  let o=`<svg viewBox="0 0 ${W} ${h}" width="100%" preserveAspectRatio="none" style="max-height:${h+40}px">`;
+  for(let i=0;i<=4;i++){const y=P.t+ih-ih*i/4;o+=`<line x1="${P.l}" x2="${W-P.r}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.07)"/><text x="${P.l-5}" y="${y+3}" text-anchor="end">${N(Math.round(max*i/4))}</text>`;}
+  labels.forEach((lb,i)=>{const cx=P.l+g*i+g/2;
+    series.forEach((s,j)=>{const val=Number(s.v[i]||0),bh=ih*val/max,x=cx-(series.length*bw)/2+j*bw;o+=`<rect x="${x}" y="${P.t+ih-bh}" width="${bw-1}" height="${bh}" rx="2" fill="${s.c}"><title>${esc(lb)} · ${esc(s.n)}: ${N(val)}</title></rect>`;});
+    if(n<=16||i%Math.ceil(n/12)===0)o+=`<text x="${cx}" y="${h-6}" text-anchor="middle">${esc(lb.slice(5))}</text>`;});
+  return o+'</svg><div class="legend">'+series.map(s=>`<span><i style="background:${s.c}"></i>${esc(s.n)}</span>`).join('')+'</div>';
+}
+function vResumen(){
+  const t=RES.totales||{},dd=RES.diario||[],hoy=dd[dd.length-1]||{},ctr=t.vistas_anuncio?(100*t.clics_anuncio/t.vistas_anuncio).toFixed(2)+'%':'—';
+  const nuevos=sum(dd,'nuevos');
+  return sinDatos()+`<div class="grid">
+   <div class="kpi"><div class="n">${N(t.visitantes)}</div><div class="l">Visitantes únicos</div><div class="s">en el período</div></div>
+   <div class="kpi"><div class="n">${N(t.vistas)}</div><div class="l">Visitas a la página</div><div class="s">hoy: ${N(hoy.vistas)} · visitantes hoy: ${N(hoy.visitantes)}</div></div>
+   <div class="kpi"><div class="n">${N(nuevos)}</div><div class="l">Visitantes nuevos</div><div class="s">primera vez que entran</div></div>
+   <div class="kpi"><div class="n">${N(t.clics_noticia)}</div><div class="l">Clics en noticias</div><div class="s">${t.visitantes?(t.clics_noticia/t.visitantes).toFixed(1):0} por visitante</div></div>
+   <div class="kpi"><div class="n">${N(t.compartidos)}</div><div class="l">Veces compartido</div></div>
+   <div class="kpi"><div class="n">${N(t.vistas_anuncio)}</div><div class="l">Impresiones de anuncios</div><div class="s">clics: ${N(t.clics_anuncio)} · CTR ${ctr}</div></div></div>
+  <div class="card"><h2>Visitantes y visitas por día</h2><div id="chD"></div></div>
+  <div class="card"><h2>Detalle día por día</h2><div class="tw"><table><tr><th>Día</th><th class="n">Visitantes</th><th class="n">Visitas</th><th class="n">Nuevos</th><th class="n">Clics noticia</th><th class="n">Compartidos</th><th class="n">Anuncios vistos</th><th class="n">Clics anuncio</th></tr>
+  ${dd.slice().reverse().map(r=>`<tr><td>${esc(r.dia)}</td><td class="n">${N(r.visitantes)}</td><td class="n">${N(r.vistas)}</td><td class="n">${N(r.nuevos)}</td><td class="n">${N(r.clics_noticia)}</td><td class="n">${N(r.compartidos)}</td><td class="n">${N(r.vistas_anuncio)}</td><td class="n">${N(r.clics_anuncio)}</td></tr>`).join('')||'<tr><td colspan="8" style="color:var(--mute)">Sin datos todavía: aparecerán cuando entren visitantes a la página.</td></tr>'}</table></div></div>`;
+}
+function dibujarResumen(){const dd=RES.diario||[];if(!$('chD'))return;$('chD').innerHTML=dd.length?chart(dd.map(r=>r.dia),[{n:'Visitantes únicos',c:'#F5C800',v:dd.map(r=>r.visitantes)},{n:'Visitas',c:'#4C8DFF',v:dd.map(r=>r.vistas)}]):'<div style="color:var(--mute);font-size:13px">Sin datos todavía.</div>';}
+
+function hace(iso){if(!iso)return '—';const m=Math.round((Date.now()-new Date(iso))/60000);return m<60?`hace ${m} min`:m<2880?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`;}
+function spark(arr){const m=Math.max(1,...arr);return `<svg width="84" height="22" viewBox="0 0 84 22">${arr.map((v,i)=>`<rect x="${i*6}" y="${22-Math.round(v/m*20)-1}" width="4.5" height="${Math.round(v/m*20)+1}" rx="1" fill="${v?'#F5C800':'rgba(255,255,255,.12)'}"/>`).join('')}</svg>`;}
+function vFuentes(){
+  const ahora=(FUE&&FUE.ahora)||[],h=(FUE&&FUE.historial)||{};
+  const ult={};(h.ultima||[]).forEach(x=>ult[x.fuente_id]=x);
+  const nd={};(h.noticias_dia||[]).forEach(x=>{(nd[x.fuente_id]=nd[x.fuente_id]||{})[x.dia]=Number(x.n);});
+  const cic={};(h.ciclos||[]).forEach(x=>cic[x.fuente_id]=x);
+  const err={};(h.errores||[]).forEach(x=>err[x.fuente_id]=x);
+  const dias=[];for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*864e5-5*36e5);dias.push(d.toISOString().slice(0,10));}
+  const filas=ahora.map(f=>{
+    const u=ult[f.id],hrs=u?(Date.now()-new Date(u.ultima))/36e5:null,serie=dias.map(d=>(nd[f.id]||{})[d]||0),n7=serie.slice(-7).reduce((a,b)=>a+b,0),hoy=serie[serie.length-1];
+    let est='na',txt='Sin revisar';
+    if(f.ok===false){est='bad';txt='Falla';}
+    else if(f.ok===true&&(hrs===null||hrs>24)){est='warn';txt='Sin notas nuevas (24 h)';}
+    else if(f.ok===true){est='ok';txt='Funciona';}
+    const c=cic[f.id],pct=c&&c.ciclos?Math.round(100*c.ok/c.ciclos):null;
+    return {f,est,txt,hrs,serie,n7,hoy,pct,e:f.error||(err[f.id]&&err[f.id].error)||'',u};
+  }).sort((a,b)=>({bad:0,warn:1,na:2,ok:3}[a.est]-{bad:0,warn:1,na:2,ok:3}[b.est])||a.f.nombre.localeCompare(b.f.nombre));
+  const ok=filas.filter(x=>x.est==='ok').length,bad=filas.filter(x=>x.est==='bad').length,warn=filas.filter(x=>x.est==='warn').length;
+  return (FUE&&FUE.error_db?`<div class="note">El historial por día no está disponible (${esc(FUE.error_db)}). Se muestra solo el estado actual. Para el historial agrega <code>SUPABASE_SERVICE_KEY</code> y ejecuta <code>estadisticas.sql</code>.</div>`:'')+
+  `<div class="grid"><div class="kpi"><div class="n">${ok}/${filas.length}</div><div class="l">Fuentes funcionando</div></div><div class="kpi"><div class="n" style="color:var(--red)">${bad}</div><div class="l">Con falla</div></div><div class="kpi"><div class="n" style="color:var(--org)">${warn}</div><div class="l">Sin notas nuevas en 24 h</div></div><div class="kpi"><div class="n">${N(filas.reduce((s,x)=>s+x.hoy,0))}</div><div class="l">Noticias hoy (todas)</div></div></div>
+  <div class="card"><h2>Estado de cada fuente <small>ordenadas: primero las que tienen problemas</small></h2><div class="tw"><table><tr><th>Fuente</th><th>Estado</th><th>Vía</th><th class="n">Hoy</th><th class="n">7 días</th><th>Últimos 14 días</th><th>Última nota</th><th class="n">Éxito</th><th>Último error</th></tr>
+  ${filas.map(x=>`<tr><td><b>${esc(x.f.nombre)}</b><div style="font-size:11px;color:var(--mute)">${esc(x.f.sitio)}</div></td><td><span class="dot ${x.est}"></span>${x.txt}${x.f.fails>1?` <span class="pill">${x.f.fails} fallos seguidos</span>`:''}</td><td><span class="pill">${esc(x.f.via||'—')}</span></td><td class="n">${N(x.hoy)}</td><td class="n">${N(x.n7)}</td><td>${spark(x.serie)}</td><td>${x.u?hace(x.u.ultima):'—'}</td><td class="n">${x.pct===null?'—':x.pct+'%'}</td><td class="errtxt" title="${esc((x.f.detalle||[]).join('\n'))}">${esc(String(x.e).slice(0,160))}</td></tr>`).join('')}</table></div>
+  <div style="font-size:11.5px;color:var(--mute);margin-top:10px"><b>Vía:</b> <i>directo</i> = RSS del medio · <i>alterno</i> = otro RSS · <i>bing</i> = respaldo con Bing News. Pasa el mouse sobre el error para ver cada intento. Una fuente con muchos fallos seguidos se reintenta solo cada 2 horas.</div></div>`;
+}
+function vAudiencia(){
+  const dd=RES.diario||[],nv=sum(dd,'nuevos'),tv=sum(dd,'visitantes'),horas=Array.from({length:24},(_,h)=>({h,v:((RES.horas||[]).find(x=>x.h===h)||{}).v||0}));
+  return sinDatos()+`<div class="cols"><div class="card"><h2>Nuevos vs que regresan <small>(suma de visitantes diarios)</small></h2>${hbars([{k:'Nuevos',v:nv},{k:'Que regresan',v:Math.max(0,tv-nv)}])}</div>
+  <div class="card"><h2>Dispositivo</h2>${hbars(RES.dispositivos)}</div><div class="card"><h2>App o navegador</h2>${hbars(RES.pwa)}</div></div>
+  <div class="cols"><div class="card"><h2>Navegador</h2>${hbars(RES.navegadores)}</div><div class="card"><h2>Sistema operativo</h2>${hbars(RES.sistemas)}</div><div class="card"><h2>De dónde llegan</h2>${hbars(RES.referencias)}</div></div>
+  <div class="card"><h2>Horas de más visitas <small>(hora de Ecuador)</small></h2>${chart(horas.map(x=>'00-'+String(x.h).padStart(2,'0')),[{n:'Visitas',c:'#F5C800',v:horas.map(x=>x.v)}],170)}</div>`;
+}
+function vContenido(){
+  const l=RES.landing||{},sh=sum(RES.compartir_redes,'v');
+  return sinDatos()+`<div class="cols"><div class="card"><h2>Fuentes más clicadas</h2>${hbars(RES.fuentes_clic)}</div><div class="card"><h2>Categorías más clicadas</h2>${hbars(RES.categorias_clic)}</div><div class="card"><h2>Compartidos por red <small>(${N(sh)} en total)</small></h2>${hbars(RES.compartir_redes)}</div></div>
+  <div class="card"><h2>Lo que pasa con los enlaces compartidos <small>(página /n/…)</small></h2><div class="grid" style="margin:0"><div class="kpi"><div class="n">${N(l.vistas)}</div><div class="l">Personas que abrieron un enlace compartido</div></div><div class="kpi"><div class="n">${N(l.a_ecuanews)}</div><div class="l">Pasaron a EcuaNews</div><div class="s">${l.vistas?Math.round(100*l.a_ecuanews/l.vistas):0}% de quienes abrieron</div></div><div class="kpi"><div class="n">${N(l.a_original)}</div><div class="l">Fueron a la nota original</div></div><div class="kpi"><div class="n">${N(l.a_anuncio)}</div><div class="l">Hicieron clic en un anuncio</div></div></div></div>`;
+}
+function vPublicidad(){
+  const an=RES.anuncios||[],fm=RES.anuncios_formato||[],dia=RES.anuncios_diario||[];
+  const nombres=an.map(a=>a.k);
+  return sinDatos()+`<div class="card"><h2>Rendimiento por anuncio <small>(para mostrar a tus anunciantes)</small></h2><div class="tw"><table><tr><th>Anuncio</th><th class="n">Impresiones</th><th class="n">Clics</th><th class="n">CTR</th></tr>
+  ${an.map(a=>`<tr><td><b>${esc(a.k)}</b></td><td class="n">${N(a.vistas)}</td><td class="n">${N(a.clics)}</td><td class="n">${a.vistas?(100*a.clics/a.vistas).toFixed(2)+'%':'—'}</td></tr>`).join('')||'<tr><td colspan="4" style="color:var(--mute)">Sin datos todavía.</td></tr>'}</table></div>
+  <div style="font-size:11.5px;color:var(--mute);margin-top:8px">Impresión = el anuncio estuvo visible al menos a la mitad en pantalla (cuenta una vez cada 5 minutos por persona). CTR = clics ÷ impresiones.</div></div>
+  <div class="card"><h2>Por formato</h2><div class="tw"><table><tr><th>Anuncio</th><th>Formato</th><th class="n">Impresiones</th><th class="n">Clics</th><th class="n">CTR</th></tr>
+  ${fm.map(a=>`<tr><td>${esc(a.k)}</td><td><span class="pill">${esc({rail:'barra lateral',inline:'franja',box:'cuadro',banner:'banner grande'}[a.f]||a.f)}</span></td><td class="n">${N(a.vistas)}</td><td class="n">${N(a.clics)}</td><td class="n">${a.vistas?(100*a.clics/a.vistas).toFixed(2)+'%':'—'}</td></tr>`).join('')}</table></div></div>
+  <div class="card"><h2>Día por día <small><select id="selAd" onchange="pintarAd()">${nombres.map(n=>`<option>${esc(n)}</option>`).join('')}</select></small></h2><div id="chAd"></div></div>`+`<script>setTimeout(pintarAd,0)<\/script>`;
+}
+function pintarAd(){
+  const s=$('selAd');if(!s||!$('chAd'))return;const dia=(RES.anuncios_diario||[]).filter(x=>x.k===s.value);
+  $('chAd').innerHTML=dia.length?chart(dia.map(x=>x.dia),[{n:'Impresiones',c:'#4C8DFF',v:dia.map(x=>x.vistas)},{n:'Clics',c:'#F5C800',v:dia.map(x=>x.clics)}],180):'<div style="color:var(--mute);font-size:13px">Sin datos.</div>';
+}
+async function exportar(){
+  try{const r=await fetch(API+'/admin/exportar?dias='+$('dias').value,{headers:{'x-admin-token':TOKEN}});if(!r.ok)throw new Error('HTTP '+r.status);
+    const b=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ecuanews-estadisticas.csv';a.click();}
+  catch(e){alert('No se pudo exportar: '+e.message);}
+}
+if(TOKEN){api('/admin/ping').then(()=>{$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}).catch(()=>{sessionStorage.removeItem('ecua_admin');TOKEN='';});}
+</script></body></html>
