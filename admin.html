@@ -87,7 +87,7 @@ async function entrar(){
   catch(e){$('loginErr').textContent=e.auth?e.message:'No se pudo conectar con el servidor (si estaba dormido, espera 1 minuto y reintenta).';}
 }
 function salir(){sessionStorage.removeItem('ecua_admin');TOKEN='';location.reload();}
-const TABS=[['resumen','Resumen'],['fuentes','Fuentes de noticias'],['audiencia','Audiencia'],['contenido','Contenido y compartidos'],['publicidad','Publicidad']];
+const TABS=[['resumen','Resumen'],['fuentes','Fuentes de noticias'],['audiencia','Audiencia'],['contenido','Contenido y compartidos'],['publicidad','Publicidad'],['probar','Probar una fuente nueva']];
 function armarTabs(){$('tabs').innerHTML=TABS.map(t=>`<button class="${t[0]===TAB?'on':''}" onclick="TAB='${t[0]}';armarTabs();pintar()">${t[1]}</button>`).join('');}
 
 async function cargar(){
@@ -100,7 +100,7 @@ async function cargar(){
 }
 function pintar(){
   if(!RES)return;
-  const v={resumen:vResumen,fuentes:vFuentes,audiencia:vAudiencia,contenido:vContenido,publicidad:vPublicidad}[TAB];
+  const v={resumen:vResumen,fuentes:vFuentes,audiencia:vAudiencia,contenido:vContenido,publicidad:vPublicidad,probar:vProbar}[TAB];
   $('main').innerHTML=v();
   if(TAB==='resumen')dibujarResumen();
 }
@@ -148,6 +148,31 @@ function dibujarResumen(){const dd=RES.diario||[];if(!$('chD'))return;$('chD').i
 
 function hace(iso){if(!iso)return '—';const m=Math.round((Date.now()-new Date(iso))/60000);return m<60?`hace ${m} min`:m<2880?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`;}
 function spark(arr){const m=Math.max(1,...arr);return `<svg width="84" height="22" viewBox="0 0 84 22">${arr.map((v,i)=>`<rect x="${i*6}" y="${22-Math.round(v/m*20)-1}" width="4.5" height="${Math.round(v/m*20)+1}" rx="1" fill="${v?'#F5C800':'rgba(255,255,255,.12)'}"/>`).join('')}</svg>`;}
+
+function vProbar(){
+  return `<div class="card"><h2>Probar una fuente nueva</h2>
+  <p style="font-size:13px;color:var(--mute);margin-bottom:12px">Escribe la dirección de un medio (su página principal o su RSS). El servidor intenta leerla como lo haría EcuaNews y te dice si sirve.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="pUrl" placeholder="ej. https://www.elheraldo.com.ec" style="flex:1;min-width:240px;background:var(--bg);border:1px solid var(--bd);color:var(--fg);padding:10px 12px;border-radius:8px" onkeydown="if(event.key==='Enter')probar()">
+  <input id="pNom" placeholder="Nombre del medio (opcional)" style="width:230px;background:var(--bg);border:1px solid var(--bd);color:var(--fg);padding:10px 12px;border-radius:8px">
+  <button class="btn pri" onclick="probar()">Probar</button></div><div id="pRes" style="margin-top:14px"></div></div>`;
+}
+async function probar(){
+  const u=$('pUrl').value.trim(),nom=$('pNom').value.trim();if(!u)return;
+  $('pRes').innerHTML='<div style="color:var(--mute)">Probando… (puede tardar unos segundos)</div>';
+  try{
+    const r=await api('/admin/probar?url='+encodeURIComponent(u));
+    if(!r.ok){$('pRes').innerHTML=`<div class="note"><b>No se pudo leer esta fuente.</b><ul style="margin:8px 0 0 18px">${(r.intentos||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul><div style="margin-top:8px">Probablemente el sitio bloquea los accesos automáticos o no ofrece RSS.</div></div>`;return;}
+    const id=(r.host||'fuente').split('.')[0].replace(/[^a-z0-9]/gi,'').toLowerCase(),name=nom||id.charAt(0).toUpperCase()+id.slice(1);
+    const linea=r.tipo==='html'
+      ?`{ id:'${id}', name:'${name.replace(/'/g,"")}', url:'', alt:[], bing:'${r.host}', html:{ url:'${r.url}', host:'${r.host}' }, ciudad_base:null, tipo:'rss', activo:true },`
+      :`{ id:'${id}', name:'${name.replace(/'/g,"")}', url:'${r.url}', alt:[], bing:'${r.host}', ciudad_base:null, tipo:'rss', activo:true },`;
+    const tipo={rss:'RSS directo',['rss-descubierto']:'RSS encontrado dentro de la página',html:'Lectura de titulares de la página (sin RSS)'}[r.tipo];
+    $('pRes').innerHTML=`<div class="note" style="background:rgba(0,196,140,.08);border-color:rgba(0,196,140,.4);color:#b6f0dc"><b>¡Sirve!</b> Tipo: ${esc(tipo)} · ${N(r.total)} notas encontradas.</div>
+    <table><tr><th>Titular</th><th>Fecha</th></tr>${(r.muestra||[]).map(m=>`<tr><td><a href="${esc(m.link)}" target="_blank" rel="noopener" style="color:var(--fg)">${esc(m.titulo)}</a></td><td style="white-space:nowrap;color:var(--mute)">${esc(String(m.fecha||'').slice(0,16))}</td></tr>`).join('')}</table>
+    <p style="font-size:12.5px;color:var(--mute);margin:14px 0 6px">Para agregarla, pásame esta línea (o pégala en la lista <code>FEEDS</code> de <code>feeds.config.js</code>):</p>
+    <textarea readonly onclick="this.select()" style="width:100%;height:74px;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:10px;font-family:Consolas,monospace;font-size:12px">${esc(linea)}</textarea>`;
+  }catch(e){$('pRes').innerHTML='<div class="note">Error: '+esc(e.message)+'</div>';}
+}
 function vFuentes(){
   const ahora=(FUE&&FUE.ahora)||[],h=(FUE&&FUE.historial)||{},sinHist=!!(FUE&&FUE.error_db);
   const ult={};(h.ultima||[]).forEach(x=>ult[x.fuente_id]=x);
@@ -159,8 +184,13 @@ function vFuentes(){
     const u=ult[f.id],hrs=u?(Date.now()-new Date(u.ultima))/36e5:null,serie=dias.map(d=>(nd[f.id]||{})[d]||0),n7=serie.slice(-7).reduce((a,b)=>a+b,0),hoy=serie[serie.length-1];
     let est='na',txt='Sin revisar';
     if(f.ok===false){est='bad';txt='Falla';}
-    else if(f.ok===true&&!sinHist&&(hrs===null||hrs>24)){est='warn';txt='Sin notas nuevas (24 h)';}
-    else if(f.ok===true){est='ok';txt='Funciona';}
+    else if(f.ok===true&&sinHist){est='ok';txt='Funciona';}
+    else if(f.ok===true&&hrs===null){
+      if((f.leidas||0)>0||(f.count||0)>0){est='warn';txt='Leyó notas pero no se guardaron';}
+      else{est='na';txt='Sin notas de los últimos 7 días';}
+    }
+    else if(f.ok===true&&hrs>72){est='warn';txt='Sin notas nuevas (3+ días)';}
+    else if(f.ok===true){est='ok';txt=hrs>24?'Funciona (publica poco)':'Funciona';}
     const c=cic[f.id],pct=c&&c.ciclos?Math.round(100*c.ok/c.ciclos):null;
     return {f,est,txt,hrs,serie,n7,hoy,pct,e:f.error||(err[f.id]&&err[f.id].error)||'',u};
   }).sort((a,b)=>({bad:0,warn:1,na:2,ok:3}[a.est]-{bad:0,warn:1,na:2,ok:3}[b.est])||a.f.nombre.localeCompare(b.f.nombre));
@@ -168,7 +198,7 @@ function vFuentes(){
   return (sinHist?(FUE.error_db==='clave-sin-permisos'?avisoClave():`<div class="note">El historial por día no está disponible (${esc(FUE.error_db)}). Se muestra solo el estado actual. Para el historial agrega <code>SUPABASE_SERVICE_KEY</code> y ejecuta <code>estadisticas.sql</code>.</div>`):'')+
   `<div class="grid"><div class="kpi"><div class="n">${ok}/${filas.length}</div><div class="l">Fuentes funcionando</div></div><div class="kpi"><div class="n" style="color:var(--red)">${bad}</div><div class="l">Con falla</div></div><div class="kpi"><div class="n" style="color:var(--org)">${sinHist?"—":warn}</div><div class="l">Sin notas nuevas en 24 h</div></div><div class="kpi"><div class="n">${sinHist?N(filas.reduce((s,x)=>s+(x.f.count||0),0)):N(filas.reduce((s,x)=>s+x.hoy,0))}</div><div class="l">${sinHist?"Noticias leídas en el último ciclo":"Noticias hoy (todas)"}</div></div></div>
   <div class="card"><h2>Estado de cada fuente <small>ordenadas: primero las que tienen problemas</small></h2><div class="tw"><table><tr><th>Fuente</th><th>Estado</th><th>Vía</th><th class="n">Hoy</th><th class="n">7 días</th><th>Últimos 14 días</th><th>Última nota</th><th class="n">Éxito</th><th>Último error</th></tr>
-  ${filas.map(x=>`<tr><td><b>${esc(x.f.nombre)}</b><div style="font-size:11px;color:var(--mute)">${esc(x.f.sitio)}</div></td><td><span class="dot ${x.est}"></span>${x.txt}${x.f.fails>1?` <span class="pill">${x.f.fails} fallos seguidos</span>`:''}</td><td><span class="pill">${esc(x.f.via||'—')}</span></td><td class="n">${N(x.hoy)}</td><td class="n">${N(x.n7)}</td><td>${spark(x.serie)}</td><td>${x.u?hace(x.u.ultima):'—'}</td><td class="n">${x.pct===null?'—':x.pct+'%'}</td><td class="errtxt" title="${esc((x.f.detalle||[]).join('\n'))}">${esc(String(x.e).slice(0,160))}</td></tr>`).join('')}</table></div>
+  ${filas.map(x=>`<tr><td><b>${esc(x.f.nombre)}</b><div style="font-size:11px;color:var(--mute)">${esc(x.f.sitio)}</div></td><td><span class="dot ${x.est}"></span>${x.txt}${x.f.fails>1?` <span class="pill">${x.f.fails} fallos seguidos</span>`:''}</td><td><span class="pill">${esc(x.f.via||'—')}</span></td><td class="n">${N(x.hoy)}</td><td class="n">${N(x.n7)}</td><td>${spark(x.serie)}</td><td>${x.u?hace(x.u.ultima):'—'}</td><td class="n">${x.pct===null?'—':x.pct+'%'}</td><td class="errtxt" title="${esc((x.f.detalle||[]).join('\n'))}">${x.f.ok===false?esc(String(x.e).slice(0,160)):`<span style="color:var(--mute)">${esc(x.f.info||((x.f.detalle||[]).length?'Antes falló: '+x.f.detalle[0].slice(0,70):''))}</span>`}</td></tr>`).join('')}</table></div>
   <div style="font-size:11.5px;color:var(--mute);margin-top:10px"><b>Vía:</b> <i>directo</i> = RSS del medio · <i>alterno</i> = otro RSS · <i>bing</i> = respaldo con Bing News · <i>html</i> = lectura de la portada del sitio (para medios sin RSS). Pasa el mouse sobre el error para ver cada intento. Una fuente con muchos fallos seguidos se reintenta solo cada 2 horas.</div></div>`;
 }
 function vAudiencia(){
