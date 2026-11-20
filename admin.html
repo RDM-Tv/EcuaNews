@@ -72,7 +72,7 @@ const API=(function(){try{const p=new URLSearchParams(location.search).get('api'
 const $=id=>document.getElementById(id);
 const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const N=v=>Number(v||0).toLocaleString('es-EC');
-let TOKEN=sessionStorage.getItem('ecua_admin')||'',TAB='resumen',RES=null,FUE=null;
+let TOKEN=sessionStorage.getItem('ecua_admin')||'',TAB='resumen',RES=null,FUE=null,PING={};
 
 async function api(path){
   const r=await fetch(API+path,{headers:{'x-admin-token':TOKEN}});
@@ -83,7 +83,7 @@ async function api(path){
 async function entrar(){
   TOKEN=$('tok').value.trim();$('loginErr').textContent='';
   if(!TOKEN){$('loginErr').textContent='Escribe la clave.';return;}
-  try{await api('/admin/ping');sessionStorage.setItem('ecua_admin',TOKEN);$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}
+  try{PING=await api('/admin/ping');sessionStorage.setItem('ecua_admin',TOKEN);$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}
   catch(e){$('loginErr').textContent=e.auth?e.message:'No se pudo conectar con el servidor (si estaba dormido, espera 1 minuto y reintenta).';}
 }
 function salir(){sessionStorage.removeItem('ecua_admin');TOKEN='';location.reload();}
@@ -104,7 +104,12 @@ function pintar(){
   $('main').innerHTML=v();
   if(TAB==='resumen')dibujarResumen();
 }
+function avisoClave(){
+  return `<div class="note"><b>La clave que pusiste en Render como <code>SUPABASE_SERVICE_KEY</code> no es la de servidor.</b> El servidor detectó: <i>${esc((RES&&RES.clave)||PING.clave||'desconocida')}</i>.<br><br>
+  <b>Cómo corregirlo:</b> en Supabase entra a <i>Project Settings → API Keys</i>, abre la pestaña <b>“Legacy anon, service_role API keys”</b> y copia la clave <b>service_role</b> (empieza con <code>eyJ</code> y es larga). No uses la <i>anon</i> ni la <i>publishable</i>. Pégala en Render → Environment → <code>SUPABASE_SERVICE_KEY</code> (en una sola línea, sin espacios) y guarda. Luego vuelve a ejecutar <code>estadisticas.sql</code> en Supabase.</div>`;
+}
 function sinDatos(){
+  if(RES&&RES.error==='clave-sin-permisos')return avisoClave();
   if(RES&&RES.error==='sin-service-key')return `<div class="note"><b>Las estadísticas de visitas aún no están activas.</b> En Render → Environment agrega <code>SUPABASE_SERVICE_KEY</code> (Supabase → Project Settings → API → clave <i>service_role</i>) y ejecuta <code>estadisticas.sql</code> en Supabase. Mientras tanto, la pestaña <b>Fuentes</b> sí funciona con el estado actual.</div>`;
   if(RES&&RES.ok===false)return `<div class="note"><b>No se pudieron leer las estadísticas:</b> ${esc(RES.error)}. Revisa que ejecutaste <code>estadisticas.sql</code> en Supabase.</div>`;
   return '';
@@ -144,7 +149,7 @@ function dibujarResumen(){const dd=RES.diario||[];if(!$('chD'))return;$('chD').i
 function hace(iso){if(!iso)return '—';const m=Math.round((Date.now()-new Date(iso))/60000);return m<60?`hace ${m} min`:m<2880?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`;}
 function spark(arr){const m=Math.max(1,...arr);return `<svg width="84" height="22" viewBox="0 0 84 22">${arr.map((v,i)=>`<rect x="${i*6}" y="${22-Math.round(v/m*20)-1}" width="4.5" height="${Math.round(v/m*20)+1}" rx="1" fill="${v?'#F5C800':'rgba(255,255,255,.12)'}"/>`).join('')}</svg>`;}
 function vFuentes(){
-  const ahora=(FUE&&FUE.ahora)||[],h=(FUE&&FUE.historial)||{};
+  const ahora=(FUE&&FUE.ahora)||[],h=(FUE&&FUE.historial)||{},sinHist=!!(FUE&&FUE.error_db);
   const ult={};(h.ultima||[]).forEach(x=>ult[x.fuente_id]=x);
   const nd={};(h.noticias_dia||[]).forEach(x=>{(nd[x.fuente_id]=nd[x.fuente_id]||{})[x.dia]=Number(x.n);});
   const cic={};(h.ciclos||[]).forEach(x=>cic[x.fuente_id]=x);
@@ -154,17 +159,17 @@ function vFuentes(){
     const u=ult[f.id],hrs=u?(Date.now()-new Date(u.ultima))/36e5:null,serie=dias.map(d=>(nd[f.id]||{})[d]||0),n7=serie.slice(-7).reduce((a,b)=>a+b,0),hoy=serie[serie.length-1];
     let est='na',txt='Sin revisar';
     if(f.ok===false){est='bad';txt='Falla';}
-    else if(f.ok===true&&(hrs===null||hrs>24)){est='warn';txt='Sin notas nuevas (24 h)';}
+    else if(f.ok===true&&!sinHist&&(hrs===null||hrs>24)){est='warn';txt='Sin notas nuevas (24 h)';}
     else if(f.ok===true){est='ok';txt='Funciona';}
     const c=cic[f.id],pct=c&&c.ciclos?Math.round(100*c.ok/c.ciclos):null;
     return {f,est,txt,hrs,serie,n7,hoy,pct,e:f.error||(err[f.id]&&err[f.id].error)||'',u};
   }).sort((a,b)=>({bad:0,warn:1,na:2,ok:3}[a.est]-{bad:0,warn:1,na:2,ok:3}[b.est])||a.f.nombre.localeCompare(b.f.nombre));
   const ok=filas.filter(x=>x.est==='ok').length,bad=filas.filter(x=>x.est==='bad').length,warn=filas.filter(x=>x.est==='warn').length;
-  return (FUE&&FUE.error_db?`<div class="note">El historial por día no está disponible (${esc(FUE.error_db)}). Se muestra solo el estado actual. Para el historial agrega <code>SUPABASE_SERVICE_KEY</code> y ejecuta <code>estadisticas.sql</code>.</div>`:'')+
-  `<div class="grid"><div class="kpi"><div class="n">${ok}/${filas.length}</div><div class="l">Fuentes funcionando</div></div><div class="kpi"><div class="n" style="color:var(--red)">${bad}</div><div class="l">Con falla</div></div><div class="kpi"><div class="n" style="color:var(--org)">${warn}</div><div class="l">Sin notas nuevas en 24 h</div></div><div class="kpi"><div class="n">${N(filas.reduce((s,x)=>s+x.hoy,0))}</div><div class="l">Noticias hoy (todas)</div></div></div>
+  return (sinHist?(FUE.error_db==='clave-sin-permisos'?avisoClave():`<div class="note">El historial por día no está disponible (${esc(FUE.error_db)}). Se muestra solo el estado actual. Para el historial agrega <code>SUPABASE_SERVICE_KEY</code> y ejecuta <code>estadisticas.sql</code>.</div>`):'')+
+  `<div class="grid"><div class="kpi"><div class="n">${ok}/${filas.length}</div><div class="l">Fuentes funcionando</div></div><div class="kpi"><div class="n" style="color:var(--red)">${bad}</div><div class="l">Con falla</div></div><div class="kpi"><div class="n" style="color:var(--org)">${sinHist?"—":warn}</div><div class="l">Sin notas nuevas en 24 h</div></div><div class="kpi"><div class="n">${sinHist?N(filas.reduce((s,x)=>s+(x.f.count||0),0)):N(filas.reduce((s,x)=>s+x.hoy,0))}</div><div class="l">${sinHist?"Noticias leídas en el último ciclo":"Noticias hoy (todas)"}</div></div></div>
   <div class="card"><h2>Estado de cada fuente <small>ordenadas: primero las que tienen problemas</small></h2><div class="tw"><table><tr><th>Fuente</th><th>Estado</th><th>Vía</th><th class="n">Hoy</th><th class="n">7 días</th><th>Últimos 14 días</th><th>Última nota</th><th class="n">Éxito</th><th>Último error</th></tr>
   ${filas.map(x=>`<tr><td><b>${esc(x.f.nombre)}</b><div style="font-size:11px;color:var(--mute)">${esc(x.f.sitio)}</div></td><td><span class="dot ${x.est}"></span>${x.txt}${x.f.fails>1?` <span class="pill">${x.f.fails} fallos seguidos</span>`:''}</td><td><span class="pill">${esc(x.f.via||'—')}</span></td><td class="n">${N(x.hoy)}</td><td class="n">${N(x.n7)}</td><td>${spark(x.serie)}</td><td>${x.u?hace(x.u.ultima):'—'}</td><td class="n">${x.pct===null?'—':x.pct+'%'}</td><td class="errtxt" title="${esc((x.f.detalle||[]).join('\n'))}">${esc(String(x.e).slice(0,160))}</td></tr>`).join('')}</table></div>
-  <div style="font-size:11.5px;color:var(--mute);margin-top:10px"><b>Vía:</b> <i>directo</i> = RSS del medio · <i>alterno</i> = otro RSS · <i>bing</i> = respaldo con Bing News. Pasa el mouse sobre el error para ver cada intento. Una fuente con muchos fallos seguidos se reintenta solo cada 2 horas.</div></div>`;
+  <div style="font-size:11.5px;color:var(--mute);margin-top:10px"><b>Vía:</b> <i>directo</i> = RSS del medio · <i>alterno</i> = otro RSS · <i>bing</i> = respaldo con Bing News · <i>html</i> = lectura de la portada del sitio (para medios sin RSS). Pasa el mouse sobre el error para ver cada intento. Una fuente con muchos fallos seguidos se reintenta solo cada 2 horas.</div></div>`;
 }
 function vAudiencia(){
   const dd=RES.diario||[],nv=sum(dd,'nuevos'),tv=sum(dd,'visitantes'),horas=Array.from({length:24},(_,h)=>({h,v:((RES.horas||[]).find(x=>x.h===h)||{}).v||0}));
@@ -197,5 +202,5 @@ async function exportar(){
     const b=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ecuanews-estadisticas.csv';a.click();}
   catch(e){alert('No se pudo exportar: '+e.message);}
 }
-if(TOKEN){api('/admin/ping').then(()=>{$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}).catch(()=>{sessionStorage.removeItem('ecua_admin');TOKEN='';});}
+if(TOKEN){api('/admin/ping').then(p=>{PING=p;$('loginView').classList.add('hide');$('appView').classList.remove('hide');armarTabs();cargar();}).catch(()=>{sessionStorage.removeItem('ecua_admin');TOKEN='';});}
 </script></body></html>
